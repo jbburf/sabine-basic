@@ -4,9 +4,34 @@
 <link rel="stylesheet" href="sabine.css">
 </head>
 <body>
-
+*/ Use CSS grid to create basic layout /*
 <progress id="" value="0" max="100"></progress>
 </body>
 <noscript>You must have Javascript enabled to use this application!</noscript>
-<script></script>
+<script>
+class LED {
+
+constructor(name){
+  this.name = name;
+  this.nomI = 0;
+  this.notLum = 0;
+  this.nomPow = 0;
+}
+
+getLum(current, temp){
+\\ return lumens based on current and temperature
+  return 0;
+}
+
+getVf(current, temp){
+  \\ return voltage based on current and temperature
+    return 0;
+}
+
+getPow(current, temp){
+  return getVf(current, temp) * current;
+}
+
+}
+</script>
 </html>
