@@ -1,11 +1,37 @@
 function loadDropDown2(){
-  var x = document.getElementById("inputGroupSelect02");
+  var selection2 = document.getElementById("inputGroupSelect02");
+  var selection1 = document.getElementById("inputGroupSelect01").value;
 
+  clearDropDown("inputGroupSelect02");
+  // https://stackoverflow.com/questions/1144705/best-way-to-store-a-key-value-array-in-javascript
+  var LEDMaker = {
+    Cree: "CXA1310,CXA1520,CXA1850,CXA2590,CXA3050,CXA3590",
+    Citizen: "CLU028,CLU038,CLU048,CLU058",
+    Nichia: "NJCWS024Z-V1,NVCWL024Z-V1,NVEWJ048Z-V1",
+    Bridgelux: "Vero 10,Vero 13,Vero 18,Vero 29" }
+
+  var options2 = LEDMaker[selection1].split(",");
+// Add original option back
   var option1 = document.createElement("option");
-  option1.text = "LED1";
-  option1.value = "LED01";
+  option1.text = "Choose...";
+  option1.selected = true;
+  selection2.add(option1);
 
-  x.add(option1);
+// loop to add all elements to dropdown based on original dropdown input
+  for (var x in options2) {
+    var option1 = document.createElement("option");
+    option1.text = options2[x];
+    option1.value = options2[x];
+    selection2.add(option1);
+    }
+}
+
+function clearDropDown(dropDownId){
+  var dropDown = document.getElementById(dropDownId);
+
+  for (var x in dropDown) {
+    dropDown.remove(x);
+  }
 }
 
 class LED {

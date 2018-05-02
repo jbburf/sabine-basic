@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- My own CSS -->
-<link rel="stylesheet" href="sabine.css">
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <!-- My own CSS -->
+  <link rel="stylesheet" href="sabine.css">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
 <!-- Use CSS grid to create basic layout -->
@@ -15,29 +16,24 @@
 
     <div class="form-row">
       <div class="input-group col">
-      <select class="custom-select" id="inputGroupSelect01">
+      <select class="custom-select" id="inputGroupSelect01" onchange="loadDropDown2()">
         <option selected>Choose...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
+        <option value="Cree">Cree</option>
+        <option value="Citizen">Citizen</option>
+        <option value="Nichia">Nichia</option>
+        <option value="Bridgelux">Bridgelux</option>
       </select>
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button" onclick="loadDropDown2()">Button</button>
-      </div>
       </div>
 
       <div class="input-group col">
       <select class="custom-select" id="inputGroupSelect02">
         <option selected>Choose...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
       </select>
       <div class="input-group-append">
         <button class="btn btn-outline-secondary" type="button">Button</button>
       </div>
       </div>
-    </div>
+    </div> <!-- close form-row -->
 
   </div>
   <div class="footer">FOOTER</div>
