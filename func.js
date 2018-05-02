@@ -1,3 +1,5 @@
+
+
 function loadDropDown2(){
   var selection2 = document.getElementById("inputGroupSelect02");
   var selection1 = document.getElementById("inputGroupSelect01").value;
@@ -32,6 +34,10 @@ function clearDropDown(dropDownId){
   for (var x in dropDown) {
     dropDown.remove(x);
   }
+}
+
+function changeProgressBar(progressBarId, newValue){
+  $('#' + progressBarId).width(newValue + "%").attr("aria-valuenow", newValue);
 }
 
 class LED {
