@@ -33,6 +33,6 @@ function clearDropDown(dropDownId){
   }
 }
 
-function changeProgressBar(progressBarId, newValue){
+function changeBSProgressBar(progressBarId, newValue){
   $('#' + progressBarId).width(newValue + "%").attr("aria-valuenow", newValue);
 }
