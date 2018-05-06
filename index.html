@@ -14,6 +14,8 @@
   <div class="menu">MENU</div>
   <div class="content">
 
+<!-- LED Input Section -->
+
     <div class="form-row">
       <div class="input-group col">
       <select class="custom-select" id="inputGroupSelect01" onchange="loadDropDown('inputGroupSelect02',getLEDModels(dropDownSelection('inputGroupSelect01')))">
@@ -26,14 +28,40 @@
       </div>
 
       <div class="input-group col">
-      <select class="custom-select" id="inputGroupSelect02">
+      <select class="custom-select" id="inputGroupSelect02" onchange="showLEDInfo(this)">
         <option selected>Choose...</option>
       </select>
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button" onclick="changeBSProgressBar('progress', 50)">Button</button>
-      </div>
       </div>
     </div> <!-- close form-row -->
+      <br />
+<!-- LED Info Section -->
+
+      <table id="LED-info" style="display:none">
+        <tr>
+          <td rowspan="3"><img id="LEDImage" alt="Default LED Image" style="width:200px" /></td>
+          <td><div id="inputVoltage"></div></td>
+        </tr>
+        <tr>
+          <td><div id="nomCurrent"></div></td>
+        </tr>
+        <tr>
+          <td><div id="nomFlux"></div></td>
+        </tr>
+      </table>
+
+<!-- Sliders to change inputs -->
+
+<div class="slidecontainer">
+  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+</div>
+<div class="slidecontainer">
+  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+</div>
+
+<!-- LED Info Section, based on slider values -->
+
+<!-- Note: remember to create function to move the progress bar along -->
+
     <!--
     Using Bootstrap progress bar instead of HTML5 version
     <progress id="calcProgress" value="0" max="100"></progress>

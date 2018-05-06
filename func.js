@@ -33,6 +33,17 @@ function clearDropDown(dropDownId){
   }
 }
 
+function showLEDInfo(callingElement){
+  var LEDName = document.getElementById("inputGroupSelect02").value;
+
+  document.getElementById("LED-info").style.display = "block";
+  document.getElementById("LEDImage").src = "assets/LED-" + LEDName + ".jpg";
+  document.getElementById("inputVoltage").innerHTML = "24 volts";
+  document.getElementById("nomCurrent").innerHTML = "1500 mA";
+  document.getElementById("nomFlux").innerHTML = getNomFlux(LEDName);
+
+}
+
 function changeBSProgressBar(progressBarId, newValue){
   $('#' + progressBarId).width(newValue + "%").attr("aria-valuenow", newValue);
 }
