@@ -84,18 +84,25 @@ Using Bootstrap progress bar instead of HTML5 version
       <hr />
 
 <!-- Sliders to change inputs -->
+<div class="slidecontainer">
+  <label class="switch">
+    <input id="TjTcToggle" type="checkbox">
+    <span class="sliderInput round"></span>
+  </label>
+  <input type="range" min="0" max="100" step="5" value="60" class="slider" id="tempSlider" /></span><span id="tempSource">T?: </span><span id="tempSliderValue">60</span>&#8451;
+  <input type="range" min="0" max="4000" value="500" class="slider" id="currentSlider" /></span><span id="currentSliderValue">500</span> mA
+</div>
 
-<span id="tempSliderRange">(-40&#8451; to 105&#8451;)</span><span class="slidecontainer">
-  <input type="range" min="1" max="100" value="50" class="slider" id="tempSlider">
-</span><span id="tempSliderValue">60&#8451;</span>
-<span> ------- </span>
-<span id="currentSliderRange">(500 mA to 2000 mA)</span>
-<span class="slidecontainer">
-  <input type="range" min="1" max="100" value="50" class="slider" id="currentSlider">
-</span><span id="currentSliderValue">500 mA</span>
 <hr />
 
 <!-- LED Info Section, based on slider values -->
+<div class="container-fluid tempclass">
+  <div class="row">
+    <div class="col-4-md">Flux: <span id="calcFlux"></span></div>
+    <div class="col-4-md">Efficacy: <span id="calcEfficacy"></span></div>
+    <div class="col-4-md">Estimated lifetime: <span id="calcLifeTime"></span></div>
+  </div>
+</div>
 
 <!-- Note: remember to create function to move the progress bar along -->
 

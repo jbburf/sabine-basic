@@ -55,12 +55,25 @@ function showLEDInfo(){
   document.getElementById("temp").innerHTML = LEDobj.temp + "&#8451;";
   document.getElementById("nomEfficacy").innerHTML = efficacy + " lm/W";
 
+  document.getElementById("tempSource").innerHTML = LEDobj.TjTc + ": ";
   setSlider("tempSlider",-40,25,125);
   setSlider("currentSlider",LEDobj.minCurrent,LEDobj.nomCurrent,LEDobj.maxCurrent);
 }
 
+function calcResults(){
+  LEDobj.tempNow = document.getElementById("tempSlider").value;
+  LEDobj.currentNow = document.getElementById("currentSlider").value;
+  var driveFactor = LEDobj.currentNow / LEDobj.nomCurrent;
+
+  document.getElementById("calcFlux").innerHTML = LEDobj.nomFlux * driveFactor * 0.7;
+  document.getElementById("calcEfficacy").innerHTML = "will be calculated...";
+  document.getElementById("calcLifeTime").innerHTML = "some hours...";
+}
+
 function setSlider(sliderID, min, current, max){
   var slider = document.getElementById(sliderID);
+
+  document.getElementById(sliderID + "Value").innerHTML = current;
 
   slider.min = min;
   slider.value = current;

@@ -25,5 +25,12 @@ setEventHandler("inputGroupSelect02","change",function () {loadDropDown('inputGr
 setEventHandler("inputGroupSelect03","change",function () {showLEDInfo()});
 
 //Show current slider values
-setEventHandler("tempSlider","change",function() { document.getElementById("tempSliderValue").innerHTML = document.getElementById("tempSlider").value + "&#8451";});
-setEventHandler("currentSlider","change",function() { document.getElementById("currentSliderValue").innerHTML = document.getElementById("currentSlider").value + "mA";});
+setEventHandler("tempSlider","input",function() { document.getElementById("tempSliderValue").innerHTML = document.getElementById("tempSlider").value;});
+setEventHandler("currentSlider","input",function() { document.getElementById("currentSliderValue").innerHTML = document.getElementById("currentSlider").value;});
+
+//Toggle Tj to Tc based on toggle values
+setEventHandler("TjTcToggle","change",function() { var tempType = document.getElementById("tempSource"); if(this.checked) {tempType.innerHTML = "Tc: ";} else { tempType.innerHTML = "Tj: ";}});
+
+//Calculate new values based in inputs from sliders
+setEventHandler("tempSlider","change",calcResults);
+setEventHandler("currentSlider","change",calcResults);
