@@ -55,6 +55,16 @@ function showLEDInfo(){
   document.getElementById("temp").innerHTML = LEDobj.temp + "&#8451;";
   document.getElementById("nomEfficacy").innerHTML = efficacy + " lm/W";
 
+  setSlider("tempSlider",-40,25,125);
+  setSlider("currentSlider",LEDobj.minCurrent,LEDobj.nomCurrent,LEDobj.maxCurrent);
+}
+
+function setSlider(sliderID, min, current, max){
+  var slider = document.getElementById(sliderID);
+
+  slider.min = min;
+  slider.value = current;
+  slider.max = max;
 }
 
 function roundTo(number,places){
