@@ -15,11 +15,23 @@ function getLEDModels(maker){
     Nichia: "NJCWS024Z-V1,NVCWL024Z-V1,NVEWJ048Z-V1",
     Bridgelux: "Vero 10,Vero 13,Vero 18,Vero 29" }
 
-    if(LEDMaker[maker] == undefined){
+    if(LEDMaker[maker] === undefined){
       console.log("LED Maker \"" + maker + "\" does not have any models...")
     }
     else{
       return LEDMaker[maker].split(",");
+    }
+}
+
+function getLEDVersions(model){
+  var LEDModels = {
+    "Vero 13": "BXRC-30E4000-B-7x, BXRC-40E4000-B-7x" }
+
+    if(LEDModels[model] === undefined){
+      console.log("LED Model \"" + model + "\" does not have any versions...");
+    }
+    else{
+      return LEDModels[model].split(",");
     }
 }
 

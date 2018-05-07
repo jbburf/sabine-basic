@@ -29,6 +29,15 @@
   grid-area: f;
 }
 
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+.LEDstats{
+
+}
+
 .tempclass{
   max-width: 80%;
   background-color:#eae7e3;

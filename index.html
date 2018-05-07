@@ -33,7 +33,7 @@ Using Bootstrap progress bar instead of HTML5 version
         <div class="input-group-prepend">
           <label class="input-group-text" for="inputGroupSelect01">Manufacturer</label>
         </div>
-      <select class="custom-select" id="inputGroupSelect01" onchange="loadDropDown('inputGroupSelect02',getLEDModels(dropDownSelection('inputGroupSelect01')))">
+      <select class="custom-select" id="inputGroupSelect01">
         <option selected>Choose...</option>
         <option value="Cree">Cree</option>
         <option value="Citizen">Citizen</option>
@@ -46,7 +46,7 @@ Using Bootstrap progress bar instead of HTML5 version
         <div class="input-group-prepend">
           <label class="input-group-text" for="inputGroupSelect02">Model</label>
         </div>
-      <select class="custom-select" id="inputGroupSelect02" onchange="showLEDInfo(this)">
+      <select class="custom-select" id="inputGroupSelect02">
         <option selected>Choose...</option>
       </select>
       </div>
@@ -55,7 +55,7 @@ Using Bootstrap progress bar instead of HTML5 version
         <div class="input-group-prepend">
           <label class="input-group-text" for="inputGroupSelect03">CCT/CRI</label>
         </div>
-      <select class="custom-select" id="inputGroupSelect03" onchange="">
+      <select class="custom-select" id="inputGroupSelect03">
         <option selected>Choose...</option>
       </select>
       </div>
@@ -63,15 +63,13 @@ Using Bootstrap progress bar instead of HTML5 version
       <hr />
 <!-- LED Info Section -->
     <div class="container-fluid tempclass">
-      <table id="LED-info" style="margin:auto; width:1000px"> <!-- style="display:none" -->
+      <table class="LEDStats" id="LED-info" style:"padding:10px;"> <!-- style="display:none" -->
         <tr>
           <td rowspan="4"><img id="LEDImage" alt="Default LED Image" style="width:200px" /></td>
-          <td>Part number: <span id="partNumber">BXRC-30E4000-D-7x</span></td>
-          <td><div id="dsLink"><a href="https://www.bridgelux.com/sites/default/files/resource_media/Bridgelux%20DS92%20Vero%2018%20Gen%207%20Array%20Data%20Sheet%2020180403%20Rev%20L.pdf" target="_blank">Datasheet Link</a></div></td>
+          <td colspan="2">Part number: <span id="partNumber">BXRC-30E4000-D-7x</span> (<a id="DSLink" href="https://www.bridgelux.com/sites/default/files/resource_media/Bridgelux%20DS92%20Vero%2018%20Gen%207%20Array%20Data%20Sheet%2020180403%20Rev%20L.pdf" target="_blank">Datasheet</a>)</td>
         </tr>
         <tr>
-          <td>Nominal inputs: <span id="nomPower">29 volts & 1050mA (30.5 watts)</span></td>
-          <td><span id="currentRange"></span</td>
+          <td colspan="2">Nominal inputs: <span id="nomPower">29 volts & 1050mA (30.5 watts)</span></td>
         </tr>
         <tr>
           <td>Nominal flux: <span>4861 lumens</span></td>
@@ -115,6 +113,7 @@ Using Bootstrap progress bar instead of HTML5 version
 <!-- My JavaScript Includes -->
 <script src="func.js"></script>
 <script src="fakeDB.js"></script>
+<script src="listeners.js"></script>
 
 <!-- My JavaScript for this document -->
 <script>
