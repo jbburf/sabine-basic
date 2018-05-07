@@ -65,7 +65,7 @@ function calcResults(){
   LEDobj.currentNow = document.getElementById("currentSlider").value;
   var driveFactor = LEDobj.currentNow / LEDobj.nomCurrent;
 
-  document.getElementById("calcFlux").innerHTML = LEDobj.nomFlux * driveFactor * 0.7;
+  document.getElementById("calcFlux").innerHTML = Math.round(LEDobj.nomFlux * driveFactor * 0.7);
   document.getElementById("calcEfficacy").innerHTML = "will be calculated...";
   document.getElementById("calcLifeTime").innerHTML = "some hours...";
 }

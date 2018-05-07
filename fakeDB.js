@@ -41,7 +41,47 @@ function getVersionAttrs(model,version){
       modelID:"1",partNumber:"BXRC-30E4000-B-7x",DSLink:"https://www.bridgelux.com/sites/default/files/resource_media/Bridgelux%20DS92%20Vero%2018%20Gen%207%20Array%20Data%20Sheet%2020180403%20Rev%20L.pdf",nomVf:34.8,minVf:32.2,maxVf:37.4,nomCurrent:900,minCurrent:90,maxCurrent:1800,nomFlux:5000,minFlux:4500,CCT:3000,nomCRI:80,typCRI:80,TjTc:"Tj",temp:25},
     "4000K, 80CRI": {}}
 
+    // y = 5.61952080861331E-09x3 - 5.26792404470511E-06x2 + 6.41412554034515E-03x + 6.64724455408106E-04
+    versions[version].flux_of_I_C3 = 5.61952080861331e9;
+    versions[version].flux_of_I_C2 = 5.26792404470511e6;
+    versions[version].flux_of_I_C1 = 6.41412554034515e3;
+    versions[version].flux_of_I_C0 = 6.64724455408106e4;
+
+    // y = -2.0168067227E-06x2 - 1.5188515406E-03x + 1.0392004202E+00
+    versions[version].flux_of_Tj_C3 = 0;
+    versions[version].flux_of_Tj_C2 = -2.0168067227e6;
+    versions[version].flux_of_Tj_C1 = -1.5188515406e3;
+    versions[version].flux_of_Tj_C0 = 1.0392004202;
+
+    // y = -1.0466514655E-06x2 + 9.5305014921E-04x + 8.6893124315E-01
+    versions[version].vf_of_I_C3 = 0;
+    versions[version].vf_of_I_C2 = -1.0466514655e6;
+    versions[version].vf_of_I_C1 = 9.5305014921e4;
+    versions[version].vf_of_I_C0 = 8.6893124315e1;
+
+    // y =  - 2.4000000000E-02
+    versions[version].vf_of_Tj_C3 = 0;
+    versions[version].vf_of_Tj_C2 = 0;
+    versions[version].vf_of_Tj_C1 = 0;
+    versions[version].vf_of_Tj_C0 = -2.4000000000e2;
+
+    // y = -2.8260815967E-07x2 + 6.2516135462E-04x + 1.3035932093E+00
+    versions[version].Rth_of_I_C3 = 0;
+    versions[version].Rth_of_I_C2 = -2.8260815967e7;
+    versions[version].Rth_of_I_C1 = 6.2516135462e4;
+    versions[version].Rth_of_I_C0 = 1.3035932093;
+
+    // y = -5.9993464479E-08x2 - 1.9999424874E-05x + 5.0133255996E-04
+    // CIEx_of_Tj
+
+    //y = 1.9997821493E-07x2 - 1.0000191709E-04x + 2.4955581335E-03
+    //CIEy_of_Tj
+
     return versions[version];
+}
+
+function getVersionsRelationships(){
+
 }
 
 function LEDobj(LEDModel,Version){
