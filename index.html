@@ -14,10 +14,25 @@
   <div class="menu">MENU</div>
   <div class="content">
 
+<!--
+Using Bootstrap progress bar instead of HTML5 version
+<progress id="calcProgress" value="0" max="100"></progress>
+-->
+  <br />
+  <div style="width: 75%; margin:auto">
+    <div class="progress">
+      <div id="progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
+    </div>
+  </div>
+  <br />
+
 <!-- LED Input Section -->
 
     <div class="form-row">
       <div class="input-group col">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="inputGroupSelect01">Manufacturer</label>
+        </div>
       <select class="custom-select" id="inputGroupSelect01" onchange="loadDropDown('inputGroupSelect02',getLEDModels(dropDownSelection('inputGroupSelect01')))">
         <option selected>Choose...</option>
         <option value="Cree">Cree</option>
@@ -28,53 +43,67 @@
       </div>
 
       <div class="input-group col">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="inputGroupSelect02">Model</label>
+        </div>
       <select class="custom-select" id="inputGroupSelect02" onchange="showLEDInfo(this)">
         <option selected>Choose...</option>
       </select>
       </div>
-    </div> <!-- close form-row -->
-      <br />
-<!-- LED Info Section -->
 
-      <table id="LED-info" style="display:none">
+      <div class="input-group col">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="inputGroupSelect03">CCT/CRI</label>
+        </div>
+      <select class="custom-select" id="inputGroupSelect03" onchange="">
+        <option selected>Choose...</option>
+      </select>
+      </div>
+    </div> <!-- close form-row -->
+      <hr />
+<!-- LED Info Section -->
+    <div class="container-fluid tempclass">
+      <table id="LED-info" style="margin:auto; width:1000px"> <!-- style="display:none" -->
         <tr>
-          <td rowspan="3"><img id="LEDImage" alt="Default LED Image" style="width:200px" /></td>
-          <td><div id="inputVoltage"></div></td>
+          <td rowspan="4"><img id="LEDImage" alt="Default LED Image" style="width:200px" /></td>
+          <td>Part number: <span id="partNumber">BXRC-30E4000-D-7x</span></td>
+          <td><div id="dsLink"><a href="https://www.bridgelux.com/sites/default/files/resource_media/Bridgelux%20DS92%20Vero%2018%20Gen%207%20Array%20Data%20Sheet%2020180403%20Rev%20L.pdf" target="_blank">Datasheet Link</a></div></td>
         </tr>
         <tr>
-          <td><div id="nomCurrent"></div></td>
+          <td>Nominal inputs: <span id="nomPower">29 volts & 1050mA (30.5 watts)</span></td>
+          <td><span id="currentRange"></span</td>
         </tr>
         <tr>
-          <td><div id="nomFlux"></div></td>
+          <td>Nominal flux: <span>4861 lumens</span></td>
+          <td>Minimum flux: <span>4375 lumens</span></td>
+        </tr>
+        <tr>
+          <td>Tj: <span id="tempCase">25&#8451;</span></td>
+          <td>Efficacy: <span id="nomEfficacy"> 160 lm/W</span></td>
         </tr>
       </table>
+    </div> <!-- container-fluid -->
+      <hr />
 
 <!-- Sliders to change inputs -->
 
-<div class="slidecontainer">
-  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-</div>
-<div class="slidecontainer">
-  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-</div>
+<span id="tempSliderRange">(-40&#8451; to 105&#8451;)</span><span class="slidecontainer">
+  <input type="range" min="1" max="100" value="50" class="slider" id="tempSlider">
+</span><span id="tempSliderValue">60&#8451;</span>
+<span> ------- </span>
+<span id="currentSliderRange">(500 mA to 2000 mA)</span>
+<span class="slidecontainer">
+  <input type="range" min="1" max="100" value="50" class="slider" id="currentSlider">
+</span><span id="currentSliderValue">500 mA</span>
+<hr />
 
 <!-- LED Info Section, based on slider values -->
 
 <!-- Note: remember to create function to move the progress bar along -->
 
-    <!--
-    Using Bootstrap progress bar instead of HTML5 version
-    <progress id="calcProgress" value="0" max="100"></progress>
-    -->
-    <br />
-    <div style="width: 75%; margin:auto">
-      <div class="progress">
-        <div id="progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
-      </div>
-    </div>
-    <br />
-  </div>
-  <div class="footer">FOOTER</div>
+</div>
+<!-- Footer section -->
+<div class="footer">FOOTER</div>
 </div>
 
 <noscript>You must have Javascript enabled to use this application!</noscript>
