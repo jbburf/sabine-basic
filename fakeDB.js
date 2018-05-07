@@ -25,14 +25,23 @@ function getLEDModels(maker){
 
 function getLEDVersions(model){
   var LEDModels = {
-    "Vero 13": "BXRC-30E4000-B-7x, BXRC-40E4000-B-7x" }
+    "Vero 13": "3000K, 80CRI<,>4000K, 80CRI" }
 
     if(LEDModels[model] === undefined){
       console.log("LED Model \"" + model + "\" does not have any versions...");
     }
     else{
-      return LEDModels[model].split(",");
+      return LEDModels[model].split("<,>");
     }
+}
+
+function getVersionAttrs(model,version){
+  var versions = {
+    "3000K, 80CRI": {
+      modelID:"1",partNumber:"BXRC-30E4000-B-7x",DSLink:"https://www.bridgelux.com/sites/default/files/resource_media/Bridgelux%20DS92%20Vero%2018%20Gen%207%20Array%20Data%20Sheet%2020180403%20Rev%20L.pdf",nomVf:34.8,minVf:32.2,maxVf:37.4,nomCurrent:900,minCurrent:90,maxCurrent:1800,nomFlux:5000,minFlux:4500,CCT:3000,nomCRI:80,typCRI:80,TjTc:"Tj",temp:25},
+    "4000K, 80CRI": {}}
+
+    return versions[version];
 }
 
 function LEDobj(LEDModel,Version){
@@ -52,19 +61,6 @@ function LEDobj(LEDModel,Version){
   console.log("Versions are: " + versions);
 
   return "LEDobj function has run.";
-}
-
-function getNomVf(LEDModel){
-  var nomVf = {CXA1310:"500",CXA1520:"1000",CXA1850:"1500",CXA2590:"1800",CXA3050:"3000",CXA3590:"4000",CLU028:"1200",CLU038:"2000",CLU048:"2500",CLU058:"3500","NJCWS024Z-V1":"800","NVCWL024Z-V1":"1500","NVEWJ048Z-V1":"2300","Vero 10":"1200","Vero 13":"2000","Vero 18":"3000","Vero 29":"4000"};
-}
-
-function getNomI(LEDModel){
-
-}
-function getNomFlux(LEDModel){
-  var nomFlux = {CXA1310:"500",CXA1520:"1000",CXA1850:"1500",CXA2590:"1800",CXA3050:"3000",CXA3590:"4000",CLU028:"1200",CLU038:"2000",CLU048:"2500",CLU058:"3500","NJCWS024Z-V1":"800","NVCWL024Z-V1":"1500","NVEWJ048Z-V1":"2300","Vero 10":"1200","Vero 13":"2000","Vero 18":"3000","Vero 29":"4000"};
-
-  return nomFlux[LEDModel] + " lumens";
 }
 // https://javascript.info/class
 class LED {

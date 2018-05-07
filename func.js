@@ -33,15 +33,32 @@ function clearDropDown(dropDownId){
   }
 }
 
-function showLEDInfo(callingElement){
-  var LEDName = document.getElementById("inputGroupSelect02").value;
+function showLEDInfo(){
+  var model = document.getElementById("inputGroupSelect02").value;
+  var version = document.getElementById("inputGroupSelect03").value;
 
-  document.getElementById("LED-info").style.display = "block";
-  document.getElementById("LEDImage").src = "assets/LED-" + LEDName + ".jpg";
-  document.getElementById("inputVoltage").innerHTML = "24 volts";
-  document.getElementById("nomCurrent").innerHTML = "1500 mA";
-  document.getElementById("nomFlux").innerHTML = getNomFlux(LEDName);
+  LEDobj = getVersionAttrs(model,version);
 
+  var power = roundTo(LEDobj.nomVf * LEDobj.nomCurrent/1000,1);
+  var efficacy = roundTo(LEDobj.nomFlux / power,0);
+
+  var tableVis = document.getElementById("LED-info");
+  if(tableVis.style.display = "none"){ tableVis.style.display = "block";}
+
+  document.getElementById("LEDImage").src = "assets/LED-" + model + ".jpg";
+  document.getElementById("partNumber").innerHTML = LEDobj.partNumber;
+  document.getElementById("DSLink").href = LEDobj.DSLink;
+  document.getElementById("nomPower").innerHTML = LEDobj.nomVf + " volts, " + LEDobj.nomCurrent + "mA (" + power + " watts)";
+  document.getElementById("nomFlux").innerHTML = LEDobj.nomFlux + " lm";
+  document.getElementById("minFlux").innerHTML = LEDobj.minFlux + " lm";
+  document.getElementById("TjTc").innerHTML = LEDobj.TjTc;
+  document.getElementById("temp").innerHTML = LEDobj.temp + "&#8451;";
+  document.getElementById("nomEfficacy").innerHTML = efficacy + " lm/W";
+
+}
+
+function roundTo(number,places){
+  return Math.round(number * Math.pow(10,places)) / Math.pow(10,places);
 }
 
 function changeBSProgressBar(progressBarId, newValue){

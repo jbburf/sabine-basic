@@ -63,21 +63,21 @@ Using Bootstrap progress bar instead of HTML5 version
       <hr />
 <!-- LED Info Section -->
     <div class="container-fluid tempclass">
-      <table class="LEDStats" id="LED-info" style:"padding:10px;"> <!-- style="display:none" -->
+      <table class="LEDStats" id="LED-info" style="display:none">
         <tr>
           <td rowspan="4"><img id="LEDImage" alt="Default LED Image" style="width:200px" /></td>
-          <td colspan="2">Part number: <span id="partNumber">BXRC-30E4000-D-7x</span> (<a id="DSLink" href="https://www.bridgelux.com/sites/default/files/resource_media/Bridgelux%20DS92%20Vero%2018%20Gen%207%20Array%20Data%20Sheet%2020180403%20Rev%20L.pdf" target="_blank">Datasheet</a>)</td>
+          <td colspan="2">Part number: <span id="partNumber">PaRtNuMbEr</span> (<a id="DSLink" href="" target="_blank">Datasheet</a>)</td>
         </tr>
         <tr>
           <td colspan="2">Nominal inputs: <span id="nomPower">29 volts & 1050mA (30.5 watts)</span></td>
         </tr>
         <tr>
-          <td>Nominal flux: <span>4861 lumens</span></td>
-          <td>Minimum flux: <span>4375 lumens</span></td>
+          <td>Nominal flux: <span id="nomFlux">? lumens</span></td>
+          <td>Minimum flux: <span id="minFlux">? lumens</span></td>
         </tr>
         <tr>
-          <td>Tj: <span id="tempCase">25&#8451;</span></td>
-          <td>Efficacy: <span id="nomEfficacy"> 160 lm/W</span></td>
+          <td><span id="TjTc">?</span>: <span id="temp">?&#8451;</span></td>
+          <td>Efficacy: <span id="nomEfficacy"> ? lm/W</span></td>
         </tr>
       </table>
     </div> <!-- container-fluid -->

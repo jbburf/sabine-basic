@@ -22,4 +22,4 @@ setEventHandler("inputGroupSelect01","change",function () {loadDropDown('inputGr
 setEventHandler("inputGroupSelect02","change",function () {loadDropDown('inputGroupSelect03',getLEDVersions(dropDownSelection('inputGroupSelect02')))});
 
 // Populate LED info section once LED Version has been selected
-setEventHandler("inputGroupSelect03","change",function () {alert("LED Version changed!")});
+setEventHandler("inputGroupSelect03","change",function () {showLEDInfo()});
