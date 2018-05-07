@@ -23,3 +23,7 @@ setEventHandler("inputGroupSelect02","change",function () {loadDropDown('inputGr
 
 // Populate LED info section once LED Version has been selected
 setEventHandler("inputGroupSelect03","change",function () {showLEDInfo()});
+
+//Show current slider values
+setEventHandler("tempSlider","change",function() { document.getElementById("tempSliderValue").innerHTML = document.getElementById("tempSlider").value + "&#8451";});
+setEventHandler("currentSlider","change",function() { document.getElementById("currentSliderValue").innerHTML = document.getElementById("currentSlider").value + "mA";});
