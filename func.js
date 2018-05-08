@@ -33,6 +33,16 @@ function clearDropDown(dropDownId){
   }
 }
 
+function setSlider(sliderID, min, current, max){
+  var slider = document.getElementById(sliderID);
+
+  document.getElementById(sliderID + "Value").innerHTML = current;
+
+  slider.min = min;
+  slider.value = current;
+  slider.max = max;
+}
+
 function showLEDInfo(){
   var model = document.getElementById("inputGroupSelect02").value;
   var version = document.getElementById("inputGroupSelect03").value;
@@ -63,21 +73,40 @@ function showLEDInfo(){
 function calcResults(){
   LEDobj.tempNow = document.getElementById("tempSlider").value;
   LEDobj.currentNow = document.getElementById("currentSlider").value;
-  var driveFactor = LEDobj.currentNow / LEDobj.nomCurrent;
 
-  document.getElementById("calcFlux").innerHTML = Math.round(LEDobj.nomFlux * driveFactor * 0.7);
-  document.getElementById("calcEfficacy").innerHTML = "will be calculated...";
+  var flux = currentToFlux(LEDobj.currentNow) * TjToFlux(LEDobj.tempNow) * LEDobj.nomFlux;
+  var vf = currentToVf(LEDobj.currentNow) * TjToVf(LEDobj.tempNow, LEDobj.nomVf);
+  var power = vf * LEDobj.currentNow/1000;
+  document.getElementById("calcFlux").innerHTML = roundTo(flux,-1);
+  document.getElementById("calcPower").innerHTML = roundTo(power,1);
+  document.getElementById("calcEfficacy").innerHTML = roundTo(flux/power,1);
   document.getElementById("calcLifeTime").innerHTML = "some hours...";
+
+  console.log("Flux(I): " + roundTo(currentToFlux(LEDobj.currentNow),3) + ", Flux(Tj): " + roundTo(TjToFlux(LEDobj.tempNow),3) + ", Vf: " + vf + ", I: " + LEDobj.currentNow);
 }
 
-function setSlider(sliderID, min, current, max){
-  var slider = document.getElementById(sliderID);
+function TjToFlux(temp){
 
-  document.getElementById(sliderID + "Value").innerHTML = current;
+  return LEDobj.flux_of_Tj_C3 * Math.pow(temp,3) + LEDobj.flux_of_Tj_C2 * Math.pow(temp,2) + LEDobj.flux_of_Tj_C1 * temp + LEDobj.flux_of_Tj_C0;
+}
 
-  slider.min = min;
-  slider.value = current;
-  slider.max = max;
+function currentToFlux(current){
+
+  return LEDobj.flux_of_I_C3 * Math.pow(current,3) + LEDobj.flux_of_I_C2 * Math.pow(current,2) + LEDobj.flux_of_I_C1 * current + LEDobj.flux_of_I_C0;
+}
+
+function TjToVf(temp, vf){
+
+  var vfOffset = LEDobj.vf_of_Tj_C3 * Math.pow(temp,3) + LEDobj.vf_of_Tj_C2 * Math.pow(temp,2) + LEDobj.vf_of_Tj_C1 * temp + LEDobj.vf_of_Tj_C0;
+
+  return vf + vfOffset;
+}
+
+function currentToVf(current){
+
+  current = current / 5.1428571429 ;
+
+  return LEDobj.vf_of_I_C3 * Math.pow(current,3) + LEDobj.vf_of_I_C2 * Math.pow(current,2) + LEDobj.vf_of_I_C1 * current + LEDobj.vf_of_I_C0;
 }
 
 function roundTo(number,places){

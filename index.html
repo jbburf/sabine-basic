@@ -84,13 +84,23 @@ Using Bootstrap progress bar instead of HTML5 version
       <hr />
 
 <!-- Sliders to change inputs -->
-<div class="slidecontainer">
-  <label class="switch">
-    <input id="TjTcToggle" type="checkbox">
-    <span class="sliderInput round"></span>
-  </label>
-  <input type="range" min="0" max="100" step="5" value="60" class="slider" id="tempSlider" /></span><span id="tempSource">T?: </span><span id="tempSliderValue">60</span>&#8451;
-  <input type="range" min="0" max="4000" value="500" class="slider" id="currentSlider" /></span><span id="currentSliderValue">500</span> mA
+<div class="container-fluid tempclass">
+  <div class="row">
+    <div class="col-1">
+      <label class="switch">
+        <input id="TjTcToggle" type="checkbox">
+        <span class="sliderInput round"></span>
+      </label>
+    </div>
+    <div class="col">
+      <div class="slidecontainer">
+        <input type="range" min="0" max="100" step="5" value="60" class="slider" id="tempSlider" /></span><span id="tempSource">T?: </span><span id="tempSliderValue">60</span>&#8451;
+      </div>
+    </div>
+    <div class="col ">
+      <input type="range" min="0" max="4000" value="500" class="slider" id="currentSlider" /></span><span id="currentSliderValue">500</span> mA
+    </div>
+  </div>
 </div>
 
 <hr />
@@ -99,6 +109,7 @@ Using Bootstrap progress bar instead of HTML5 version
 <div class="container-fluid tempclass">
   <div class="row">
     <div class="col-md">Flux: <span id="calcFlux"></span> lm</div>
+    <div class="col-md">Power: <span id="calcPower"></span> watts</div>
     <div class="col-md">Efficacy: <span id="calcEfficacy"></span> lm/W</div>
     <div class="col-md">Estimated lifetime: <span id="calcLifeTime"></span> hours</div>
   </div>
