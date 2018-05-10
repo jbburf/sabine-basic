@@ -102,12 +102,15 @@ function LEDobj(LEDModel,Version){
 class LED {
 
   constructor(name){
+    // create optional parameters to set basic values
     this.name = name;
     this.nomVf = 0
     this.nomI = 0;
     this.notLum = 0;
     this.nomPow = 0;
   }
+
+// need recursive function to solve for stats when changing I or Tj
 
   getLum(current, temp){
   // return lumens based on current and temperature
