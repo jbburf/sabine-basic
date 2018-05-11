@@ -42,6 +42,7 @@ th, td {
   max-width: 80%;
   background-color:#eae7e3;
   border-radius:.25rem;
+  padding-top:.5rem;
 }
 
 /* CSS for input sliders */
