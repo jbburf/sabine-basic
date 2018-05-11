@@ -53,7 +53,7 @@ function getVersionAttrs(model,version){
       nomCRI:80,
       typCRI:80,
       TjTc:"Tj",
-      temp:25,
+      nomTemp:25,
       flux_of_I:{
         0:2.2675497168e-03,
         1:1.2307082973e-03,
