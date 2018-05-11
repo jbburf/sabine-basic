@@ -29,7 +29,7 @@ setEventHandler("tempSlider","input",function() { document.getElementById("tempS
 setEventHandler("currentSlider","input",function() { document.getElementById("currentSliderValue").innerHTML = document.getElementById("currentSlider").value;});
 
 //Toggle Tj to Tc based on toggle values
-setEventHandler("TjTcToggle","change",function() { var tempType = document.getElementById("tempSource"); if(this.checked) {tempType.innerHTML = "Tc: ";} else { tempType.innerHTML = "Tj: ";}});
+setEventHandler("TjTcToggle","change",function() { var tempType = document.getElementById("tempSource"); if(this.checked) {tempType.innerHTML = "Tc";} else { tempType.innerHTML = "Tj";}});
 
 //Calculate new values based in inputs from sliders
 setEventHandler("tempSlider","change",calcResults);

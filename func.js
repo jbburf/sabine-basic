@@ -1,4 +1,105 @@
 //
+// LED Object Class Definition
+//
+
+class LED {
+// https://javascript.info/class
+  constructor(name,model,version){
+    // create optional parameters to set basic values
+    this.name = name;
+    this.model = model;
+    this.version = version;
+
+    if(model === undefined || version === undefined){
+      this.make = "";
+      this.model = "";
+      this.version = "";
+      this.nom.vf = 0
+      this.nom.i = 0;
+      this.nom.TjTc = "Tj";
+      this.nom.temp["Tj"] = 25;
+      this.nom.flux = 0;
+      this.flux_of_I = 0;
+      this.flux_of_Tj_C = 0;
+      this.vf_of_I_C = 0;
+      this.vf_of_Tj_C = 0;
+      this.Rth_of_I = 0;
+    }
+    else{
+      temp = getVersionAttrs(model,version);
+      for(var x in temp){ this[x] = temp[x]; }
+    }
+
+      this.now = this.nom;
+
+    // Set Tj based on Tc or Tc based on Tj if full specs are not given
+  }
+
+// need recursive function to solve for stats when changing I or Tj
+
+  setCurrent(I){ this.now.i = I; }
+  changeCurrent(I){ this.now.i +=I; }
+  setTemp(temp){this.now.temp = temp;}
+  changeTemp(temp){this.now.temp +=temp;}
+
+  getLum(current, temp){
+  // return lumens based on current and temperature
+    return 0;
+  }
+
+  getVf(current, temp){
+  // return voltage based on current and temperature
+      return 0;
+  }
+
+  getPow(current, temp){
+    return getVf(current, temp) * current;
+  }
+
+  flux_of_Tj(temp){
+    var fluxFactor = 0;
+    for(var x of this.flux_of_Tj){
+      fluxFactor += this.flux_of_Tj[x] * Math.pow(temp,x);
+    }
+    return fluxFactor;
+  }
+
+  flux_of_I(current){
+    var fluxFactor = 0;
+    for(var x of this.flux_of_I){
+      fluxFactor += this.flux_of_I[x] * Math.pow(current,x);
+    }
+    return fluxFactor;
+  }
+
+  vf_of_Tj(temp){
+    var vfOffSet = 0;
+    for(var x of this.vf_to_Tj){
+      vfOffSet += this.vf_of_Tj[x] * Math.pow(temp,x);
+    }
+
+    this.now.temp[1] = this.nom.temp[1] + vfOffSet;
+  }
+
+  vf_of_I(current){
+    var vfFactor = 0;
+    for(var x of this.vf_of_I){
+      vfFactor += this.vf_of_I[x] * Math.pow(current,x);
+    }
+    return vfFactor;
+  }
+
+  estLifeTime(I,temp){
+    if(I === undefined) { I = this.non.i; }
+    if(temp === undefined) { temp = this.nom.temp };
+
+    return "50,000";
+  }
+
+} // end of LED object definition
+
+
+//
 // UI functions
 //
 
@@ -123,118 +224,27 @@ function showLEDInfo(){
 }
 
 function calcResults(){
-  LEDobj.tempNow = document.getElementById("tempSlider").value;
-  LEDobj.currentNow = document.getElementById("currentSlider").value;
+  var runFlag = false;
 
-  var flux = currentToFlux(LEDobj.currentNow) * TjToFlux(LEDobj.tempNow) * LEDobj.nomFlux;
-  var vf = currentToVf(LEDobj.currentNow) * TjToVf(LEDobj.tempNow, LEDobj.nomVf);
-  var power = vf * LEDobj.currentNow/1000;
-  document.getElementById("calcFlux").innerHTML = roundTo(flux,-1);
-  document.getElementById("calcPower").innerHTML = roundTo(power,1);
-  document.getElementById("calcEfficacy").innerHTML = roundTo(flux/power,1);
-  document.getElementById("calcLifeTime").innerHTML = LEDobj.estLifeTime();
+  if(runFlag){
+    LEDobj.now.temp["Tj"] = document.getElementById("tempSlider").value;
+    LEDobj.now.i = document.getElementById("currentSlider").value;
 
-  console.log("Flux(I): " + roundTo(currentToFlux(LEDobj.currentNow),3) + ", Flux(Tj): " + roundTo(TjToFlux(LEDobj.tempNow),3) + ", Vf: " + vf + ", I: " + LEDobj.currentNow);
+    var flux = LEDobj.now.flux;
+    var vf = LEDobj.now.vf;
+    var power = vf * LEDobj.now.i/1000;
+    document.getElementById("calcFlux").innerHTML = roundTo(flux,-1);
+    document.getElementById("calcPower").innerHTML = roundTo(power,1);
+    document.getElementById("calcEfficacy").innerHTML = roundTo(flux/power,1);
+    document.getElementById("calcLifeTime").innerHTML = LEDobj.estLifeTime();
+
+    console.log("Flux(I): " + roundTo(currentToFlux(LEDobj.now.i),3) + ", Flux(Tj): " + roundTo(TjToFlux(LEDobj.now.temp["Tj"]),3) + ", Vf: " + vf + ", I: " + LEDobj.now.i);
+  }
+  else{
+      document.getElementById("tempSource").innerHTML = LEDobj.nom.TjTc;
+      return function() { return runFlag = true; }
+  }
 }
-
-//
-// LED Object
-//
-
-class LED {
-// https://javascript.info/class
-  constructor(name,model,version){
-    // create optional parameters to set basic values
-    this.name = name;
-    this.model = model;
-    this.version = version;
-
-    if(model === undefined || version === undefined){
-      this.make = "";
-      this.model = "";
-      this.version = "";
-      this.nom.vf = 0
-      this.nom.i = 0;
-      this.nom.temp["Tj"] = 25;
-      this.nom.flux = 0;
-      this.flux_of_I = 0;
-      this.flux_of_Tj_C = 0;
-      this.vf_of_I_C = 0;
-      this.vf_of_Tj_C = 0;
-      this.Rth_of_I = 0;
-    }
-    else{
-      temp = getVersionAttrs(model,version);
-      for(var x in temp){ this[x] = temp[x]; }
-    }
-
-      this.now = this.nom;
-
-    // Set Tj based on Tc or Tc based on Tj if full specs are not given
-  }
-
-// need recursive function to solve for stats when changing I or Tj
-
-  setCurrent(I){ this.now.i = I; }
-  changeCurrent(I){ this.now.i +=I; }
-  setTemp(temp){this.now.temp = temp;}
-  changeTemp(temp){this.now.temp +=temp;}
-
-  getLum(current, temp){
-  // return lumens based on current and temperature
-    return 0;
-  }
-
-  getVf(current, temp){
-  // return voltage based on current and temperature
-      return 0;
-  }
-
-  getPow(current, temp){
-    return getVf(current, temp) * current;
-  }
-
-  flux_of_Tj(temp){
-    var fluxFactor = 0;
-    for(var x of this.flux_of_Tj){
-      fluxFactor += this.flux_of_Tj[x] * Math.pow(temp,x);
-    }
-    return fluxFactor;
-  }
-
-  flux_of_I(current){
-    var fluxFactor = 0;
-    for(var x of this.flux_of_I){
-      fluxFactor += this.flux_of_I[x] * Math.pow(current,x);
-    }
-    return fluxFactor;
-  }
-
-  vf_of_Tj(temp){
-    var vfOffSet = 0;
-    for(var x of this.vf_to_Tj){
-      vfOffSet += this.vf_of_Tj[x] * Math.pow(temp,x);
-    }
-
-    this.now.temp[1] = this.nom.temp[1] + vfOffSet;
-  }
-
-  vf_of_I(current){
-    var vfFactor = 0;
-    for(var x of this.vf_of_I){
-      vfFactor += this.vf_of_I[x] * Math.pow(current,x);
-    }
-    return vfFactor;
-  }
-
-  estLifeTime(I,temp){
-    if(I === undefined) { I = this.non.i; }
-    if(temp === undefined) { temp = this.nom.temp };
-
-    return "50,000";
-  }
-
-} // end of LED object definition
 
 //
 // General functions
