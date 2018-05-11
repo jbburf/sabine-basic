@@ -37,39 +37,47 @@ function getLEDVersions(model){
 
 function getVersionAttrs(model,version){
   var versions = {
-    "3000K, 80CRI": {
-      modelID:"1",partNumber:"BXRC-30E4000-B-7x",DSLink:"https://www.bridgelux.com/sites/default/files/resource_media/Bridgelux%20DS92%20Vero%2018%20Gen%207%20Array%20Data%20Sheet%2020180403%20Rev%20L.pdf",nomVf:34.8,minVf:32.2,maxVf:37.4,nomCurrent:900,minCurrent:90,maxCurrent:1800,nomFlux:5000,minFlux:4500,CCT:3000,nomCRI:80,typCRI:80,TjTc:"Tj",temp:25},
-    "4000K, 80CRI": {}}
+    "3000K, 80CRI":{
+      modelID:"1",
+      partNumber:"BXRC-30E4000-B-7x",
+      DSLink:"https://www.bridgelux.com/sites/default/files/resource_media/Bridgelux%20DS92%20Vero%2018%20Gen%207%20Array%20Data%20Sheet%2020180403%20Rev%20L.pdf",
+      nomVf:34.8,
+      minVf:32.2,
+      maxVf:37.4,
+      nomCurrent:900,
+      minCurrent:90,
+      maxCurrent:1800,
+      nomFlux:5000,
+      minFlux:4500,
+      CCT:3000,
+      nomCRI:80,
+      typCRI:80,
+      TjTc:"Tj",
+      temp:25,
+      flux_of_I:{
+        0:2.2675497168e-03,
+        1:1.2307082973e-03,
+        2:-1.3267708046e-07,
+        3:2.2121391239e-11 },
+      flux_of_Tj:{
+        0:1.0392004202,
+        1:-1.5188515406e-3,
+        2:-2.0168067227e-6,
+        3:0 },
+      vf_of_I:{
+        0:8.6893124315e-1,
+        1:9.5305014921e-4,
+        2:-1.0466514655e-6,
+        3:0 },
+      vf_of_Tj:-2.4e-2,
+      Rth_of_I:{
+        0:1.3035932093,
+        1:6.2516135462e-4,
+        2:-2.8260815967e-7 }
+      },
+    "4000K, 80CRI":{}}
 
-    // R² = 0.99976327268
-    versions[version].flux_of_I_C3 = 2.2121391239e-11;
-    versions[version].flux_of_I_C2 = -1.3267708046e-07;
-    versions[version].flux_of_I_C1 = 1.2307082973e-03;
-    versions[version].flux_of_I_C0 = 2.2675497168e-03;
-
-    // y = -2.0168067227E-06x2 - 1.5188515406E-03x + 1.0392004202E+00
-    versions[version].flux_of_Tj_C3 = 0;
-    versions[version].flux_of_Tj_C2 = -2.0168067227e-6;
-    versions[version].flux_of_Tj_C1 = -1.5188515406e-3;
-    versions[version].flux_of_Tj_C0 = 1.0392004202;
-
-    // y = -1.0466514655E-06x2 + 9.5305014921E-04x + 8.6893124315E-01
-    versions[version].vf_of_I_C3 = 0;
-    versions[version].vf_of_I_C2 = -1.0466514655e-6;
-    versions[version].vf_of_I_C1 = 9.5305014921e-4;
-    versions[version].vf_of_I_C0 = 8.6893124315e-1;
-
-    // y =  - 2.4000000000E-02
-    versions[version].vf_of_Tj_C3 = 0;
-    versions[version].vf_of_Tj_C2 = 0;
-    versions[version].vf_of_Tj_C1 = 0;
-    versions[version].vf_of_Tj_C0 = -2.4000000000e-2;
-
-    // y = -2.8260815967E-07x2 + 6.2516135462E-04x + 1.3035932093E+00
-    versions[version].Rth_of_I_C3 = 0;
-    versions[version].Rth_of_I_C2 = -2.8260815967e-7;
-    versions[version].Rth_of_I_C1 = 6.2516135462e-4;
-    versions[version].Rth_of_I_C0 = 1.3035932093;
+    // R² = 0.99976327268 for flux(I)
 
     // y = -5.9993464479E-08x2 - 1.9999424874E-05x + 5.0133255996E-04
     // CIEx_of_Tj
@@ -80,7 +88,7 @@ function getVersionAttrs(model,version){
     return versions[version];
 }
 
-function LEDobj(LEDModel,Version){
+function LEDobj(model,Version){
 
   var LEDVersions = {
   "Vero 10": {
@@ -93,7 +101,7 @@ function LEDobj(LEDModel,Version){
     "27E":"2700K, 80CRI","30E":"3000K, 80 CRI","40E":"4000K, 80 CRI","50C":"5000K, 70 CRI"}
   };
 
-  var versions = LEDVersions[LEDModel];
+  var versions = LEDVersions[model];
   console.log("Versions are: " + versions);
 
   return "LEDobj function has run.";
@@ -101,13 +109,30 @@ function LEDobj(LEDModel,Version){
 // https://javascript.info/class
 class LED {
 
-  constructor(name){
+  constructor(name,model,version){
     // create optional parameters to set basic values
     this.name = name;
-    this.nomVf = 0
-    this.nomI = 0;
-    this.notLum = 0;
-    this.nomPow = 0;
+    this.model = model;
+    this.version = version;
+
+    if(model === undefined || version === undefined){
+      this.make = "";
+      this.model = "";
+      this.version = "";
+      this.nomVf = 0
+      this.nomI = 0;
+      this.notLum = 0;
+      this.nomPow = 0;
+      this.flux_of_I = 0;
+      this.flux_of_Tj_C = 0;
+      this.vf_of_I_C = 0;
+      this.vf_of_Tj_C = 0;
+      this.Rth_of_I = 0;
+    }
+    else{
+      this.what = getVersionAttrs(model,version);
+    }
+
   }
 
 // need recursive function to solve for stats when changing I or Tj

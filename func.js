@@ -1,5 +1,3 @@
-
-
 function loadDropDown(dropDownId, contents){
   var targetDropDown = document.getElementById(dropDownId);
 
