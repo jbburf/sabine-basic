@@ -1,3 +1,50 @@
+// https://javascript.info/class
+class LED {
+
+  constructor(name,model,version){
+    // create optional parameters to set basic values
+    this.name = name;
+    this.model = model;
+    this.version = version;
+
+    if(model === undefined || version === undefined){
+      this.make = "";
+      this.model = "";
+      this.version = "";
+      this.nomVf = 0
+      this.nomI = 0;
+      this.notLum = 0;
+      this.nomPow = 0;
+      this.flux_of_I = 0;
+      this.flux_of_Tj_C = 0;
+      this.vf_of_I_C = 0;
+      this.vf_of_Tj_C = 0;
+      this.Rth_of_I = 0;
+    }
+    else{
+      temp = getVersionAttrs(model,version);
+      for(var x in temp){ this[x] = temp[x]; }
+    }
+
+  }
+
+// need recursive function to solve for stats when changing I or Tj
+
+  getLum(current, temp){
+  // return lumens based on current and temperature
+    return 0;
+  }
+
+  getVf(current, temp){
+  // return voltage based on current and temperature
+      return 0;
+  }
+
+  getPow(current, temp){
+    return getVf(current, temp) * current;
+  }
+}
+
 function loadDropDown(dropDownId, contents){
   var targetDropDown = document.getElementById(dropDownId);
 
@@ -45,7 +92,7 @@ function showLEDInfo(){
   var model = document.getElementById("inputGroupSelect02").value;
   var version = document.getElementById("inputGroupSelect03").value;
 
-  LEDobj = getVersionAttrs(model,version);
+  LEDobj = new LED("LED1",model,version);
 
   var power = roundTo(LEDobj.nomVf * LEDobj.nomCurrent/1000,1);
   var efficacy = roundTo(LEDobj.nomFlux / power,0);
