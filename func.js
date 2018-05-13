@@ -39,8 +39,8 @@ class LED {
 
   setCurrent(I){ this.now.i = I; }
   changeCurrent(I){ this.now.i +=I; }
-  setTemp(temp){this.now.temp = temp;}
-  changeTemp(temp){this.now.temp +=temp;}
+  setTemp(temp){ this.now.temp = temp; }
+  changeTemp(temp){ this.now.temp +=temp; }
 
   getLum(current, temp){
   // return lumens based on current and temperature
@@ -107,9 +107,9 @@ function pageLoad(){
   var maker = decodeURI(getURIParams("mk"));
   var model = decodeURI(getURIParams("md"));
   var version = decodeURI(getURIParams("vr"));
-  var makerPassed = (maker !== undefined && maker !== null);
-  var modelPassed = (model !== undefined && model !== null);
-  var versionPassed = (version !== undefined && version !== null);
+  var makerPassed = !(maker !== undefined && maker !== null);
+  var modelPassed = !(model !== undefined && model !== null);
+  var versionPassed = !(version !== undefined && version !== null);
 
   if(makerPassed){
     loadDropDown("inputGroupSelect01",getLEDMakers());
