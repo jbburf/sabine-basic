@@ -1,4 +1,4 @@
-let debugFlag = true;
+const debugFlag = true;
 
 //
 // LED Object Class Definition
@@ -31,14 +31,22 @@ class LED {
       this.now = this.nom; }
 
     // Set Tj based on Tc or Tc based on Tj if full specs are not given
+    let tempOffset = this.Rth(this.nom.i);
 
+    if(this.nom.TjTc == "Tj"){
+      if(this.nom.temp["Tj"] === undefined){ this.nom.temp["Tj"] = 25; }
+      this.nom.temp["Tc"] = this.nom.temp["Tj"] + tempOffset; }
+    else if (this.nom.TjTc == "Tc") {
+      if(this.nom.temp["Tc"] === undefined){ this.nom.temp["Tc"] = 60; }
+      this.nom.temp["Tj"] = this.nom.temp["Tc"] - tempOffset; }
+    else{ console.log("Unexpected value '" + this.nom.TjTc + "', should be 'Tj' or 'Tc'."); }
   }
 
 // need recursive function to solve for stats when changing I or Tj
 
-  setCurrent(I){ this.now.i = I; }
-  changeCurrent(I){ this.now.i +=I; }
+  setCurrent(i){ this.now.i = i; }
   setTemp(temp){ this.now.temp = temp; }
+  changeCurrent(i){ this.now.i +=i; }
   changeTemp(temp){ this.now.temp +=temp; }
 
   getLum(current, temp){
@@ -51,37 +59,51 @@ class LED {
       return 0;
   }
 
+  Rth(current = this.now.i){
+    let Rth = 0;
+
+    for(let x in this.Rth_of_I){
+      Rth += this.Rth_of_I[x] * Math.pow(current,x); }
+
+    return Rth;
+  }
+
   getPow(current, temp){
     return getVf(current, temp) * current;
   }
 
-  flux_of_Tj(temp){
-    var fluxFactor = 0;
-    for(var x of this.flux_of_Tj){
-      fluxFactor += this.flux_of_Tj[x] * Math.pow(temp,x); }
-    return fluxFactor;
+  setTemps(current = this.nom.i, tempType = "Tj"){
+
+    let tempOffset = Rth(current);
+
+    if(tempType == "Tj"){ his.now.temp["Tc"] = this.now.temp["Tj"] + Rth; }
+    else if (tempType == "Tc"){ this.now.temp["Tj"] = this.now.temp["Tc"] - Rth; }
   }
 
-  flux_of_I(current){
-    var fluxFactor = 0;
-    for(var x of this.flux_of_I){
-      fluxFactor += this.flux_of_I[x] * Math.pow(current,x); }
-    return fluxFactor;
+  fluxFactor(current = this.now.i, Tj = this.now.temp["Tj"]){
+    var fluxFactorI = 0;
+    var fluxFactorTemp = 0;
+
+    for(var x in this.flux_of_Tj){
+      fluxFactorTemp += this.flux_of_Tj[x] * Math.pow(Tj,x); }
+
+    for(var x in this.flux_of_I){
+      fluxFactorI += this.flux_of_I[x] * Math.pow(current,x); }
+
+    return fluxFactorI * fluxFactorTemp;
   }
 
-  vf_of_Tj(temp){
-    var vfOffSet = 0;
-    for(var x of this.vf_to_Tj){
+  vfFactor(current = this.now.i, temp = this.now.temp["Tj"]){
+    let vfFactor = 0;
+    let vfOffSet = 0;
+
+    for(var x in this.vf_of_I){
+      vfFactor += this.vf_of_I[x] * Math.pow(current,x); }
+
+    for(var x in this.vf_to_Tj){
       vfOffSet += this.vf_of_Tj[x] * Math.pow(temp,x); }
 
-    this.now.temp[1] = this.nom.temp[1] + vfOffSet;
-  }
-
-  vf_of_I(current){
-    var vfFactor = 0;
-    for(var x of this.vf_of_I){
-      vfFactor += this.vf_of_I[x] * Math.pow(current,x); }
-    return vfFactor;
+    this.now.vf = this.nom.vf *vfFactor + vfOffset;
   }
 
   estLifeTime(I,temp){
@@ -239,10 +261,12 @@ function calcResults(){
 
   return function(){
     let message = "";
+    let tempSource = document.getElementById("tempSource").innerHTML;
     runCount++;
 
     if(runFlag){
-      LEDobj.now.temp["Tj"] = document.getElementById("tempSlider").value;
+      LEDobj.now.TjTc = tempSource;
+      LEDobj.now.temp[LEDobj.now.TjTc] = document.getElementById("tempSlider").value;
       LEDobj.now.i = document.getElementById("currentSlider").value;
 
       var flux = LEDobj.now.flux;
@@ -255,7 +279,7 @@ function calcResults(){
 
       message = runCount + " times"; }
     else{
-        document.getElementById("tempSource").innerHTML = LEDobj.nom.TjTc;
+        tempSource = LEDobj.nom.TjTc;
         runFlag = true;
         message = "once"; }
 
