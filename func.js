@@ -1,3 +1,5 @@
+let debugFlag = true;
+
 //
 // LED Object Class Definition
 //
@@ -23,12 +25,9 @@ class LED {
       this.flux_of_Tj_C = 0;
       this.vf_of_I_C = 0;
       this.vf_of_Tj_C = 0;
-      this.Rth_of_I = 0;
-    }
+      this.Rth_of_I = 0; }
     else{
-      temp = getVersionAttrs(model,version);
-      for(var x in temp){ this[x] = temp[x]; }
-    }
+      Object.assign(this, getVersionAttrs(model,version)); }
 
       this.now = this.nom;
 
@@ -90,7 +89,7 @@ class LED {
   }
 
   estLifeTime(I,temp){
-    if(I === undefined) { I = this.non.i; }
+    if(I === undefined) { I = this.nom.i; }
     if(temp === undefined) { temp = this.nom.temp };
 
     return "50,000";
@@ -138,6 +137,9 @@ function pageLoad(){
   }
 
   if(makerPassed && modelPassed && versionPassed) { showLEDInfo(); }
+
+  if(debugFlag){ console.log("Page successfully loaded."); }
+
 }
 
 function getOptionIndex(elementID,optionValue){
@@ -184,6 +186,9 @@ function clearDropDown(dropDownId){
 
 function changeBSProgressBar(progressBarId, newValue){
   $('#' + progressBarId).width(newValue + "%").attr("aria-valuenow", newValue);
+
+    if(debugFlag){ console.log("Progress slider set to: " + newValue + "%."); }
+
 }
 
 function setSlider(sliderID, min, current, max){
@@ -194,6 +199,7 @@ function setSlider(sliderID, min, current, max){
   slider.min = min;
   slider.value = current;
   slider.max = max;
+
 }
 
 function showLEDInfo(){
@@ -205,8 +211,12 @@ function showLEDInfo(){
   var power = roundTo(LEDobj.nom.vf * LEDobj.nom.i/1000,1);
   var efficacy = roundTo(LEDobj.nom.flux / power,0);
 
-  var tableVis = document.getElementById("LED-info");
+  let tableVis = document.getElementById("LED-info");
+  let sliderVis = document.getElementById("slider-section");
+  let resultVis = document.getElementById("result-section");
   if(tableVis.style.display = "none"){ tableVis.style.display = "block";}
+  if(sliderVis.style.display = "none"){ sliderVis.style.display = "block";}
+  if(resultVis.style.display = "none"){ resultVis.style.display = "block";}
 
   document.getElementById("LEDImage").src = "assets/LED-" + model + ".jpg";
   document.getElementById("partNumber").innerHTML = LEDobj.partNumber;
@@ -221,28 +231,38 @@ function showLEDInfo(){
   document.getElementById("tempSource").innerHTML = LEDobj.nom.temp[LEDobj.nom.TjTc] + ": ";
   setSlider("tempSlider",-40,25,125);   // NEED to update this to set slider and toggle based on LED inputs
   setSlider("currentSlider",LEDobj.min.i,LEDobj.nom.i,LEDobj.max.i);
+
+  if(debugFlag){ console.log("LED info shown for selected LED."); }
+
 }
 
 function calcResults(){
-  var runFlag = false;
+  let runFlag = false;
+  let runCount = 0;
 
-  if(runFlag){
-    LEDobj.now.temp["Tj"] = document.getElementById("tempSlider").value;
-    LEDobj.now.i = document.getElementById("currentSlider").value;
+  return function(){
+    let message = "";
+    runCount++;
 
-    var flux = LEDobj.now.flux;
-    var vf = LEDobj.now.vf;
-    var power = vf * LEDobj.now.i/1000;
-    document.getElementById("calcFlux").innerHTML = roundTo(flux,-1);
-    document.getElementById("calcPower").innerHTML = roundTo(power,1);
-    document.getElementById("calcEfficacy").innerHTML = roundTo(flux/power,1);
-    document.getElementById("calcLifeTime").innerHTML = LEDobj.estLifeTime();
+    if(runFlag){
+      LEDobj.now.temp["Tj"] = document.getElementById("tempSlider").value;
+      LEDobj.now.i = document.getElementById("currentSlider").value;
 
-    console.log("Flux(I): " + roundTo(currentToFlux(LEDobj.now.i),3) + ", Flux(Tj): " + roundTo(TjToFlux(LEDobj.now.temp["Tj"]),3) + ", Vf: " + vf + ", I: " + LEDobj.now.i);
-  }
-  else{
-      document.getElementById("tempSource").innerHTML = LEDobj.nom.TjTc;
-      return function() { return runFlag = true; }
+      var flux = LEDobj.now.flux;
+      var vf = LEDobj.now.vf;
+      var power = vf * LEDobj.now.i/1000;
+      document.getElementById("calcFlux").innerHTML = roundTo(flux,-1);
+      document.getElementById("calcPower").innerHTML = roundTo(power,1);
+      document.getElementById("calcEfficacy").innerHTML = roundTo(flux/power,1);
+      document.getElementById("calcLifeTime").innerHTML = LEDobj.estLifeTime();
+
+      message = runCount + " times"; }
+    else{
+        document.getElementById("tempSource").innerHTML = LEDobj.nom.TjTc;
+        runFlag = true;
+        message = "once"; }
+
+    if(debugFlag){ console.log("Results have been calculated " + message + ". " + LEDobj.nom.TjTc + ": " + LEDobj.now.temp[LEDobj.nom.TjTc] + " and I: " + LEDobj.now.i + " mA."); }
   }
 }
 

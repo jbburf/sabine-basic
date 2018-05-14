@@ -32,5 +32,5 @@ setEventHandler("currentSlider","input",function() { document.getElementById("cu
 setEventHandler("TjTcToggle","change",function() { var tempType = document.getElementById("tempSource"); if(this.checked) {tempType.innerHTML = "Tc";} else { tempType.innerHTML = "Tj";}});
 
 //Calculate new values based in inputs from sliders
-setEventHandler("tempSlider","change",calcResults);
-setEventHandler("currentSlider","change",calcResults);
+setEventHandler("tempSlider","change",calcResults());
+setEventHandler("currentSlider","change",calcResults());
