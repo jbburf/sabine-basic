@@ -101,9 +101,9 @@ function pageLoad(){
   var maker = decodeURI(getURIParams("mk"));
   var model = decodeURI(getURIParams("md"));
   var version = decodeURI(getURIParams("vr"));
-  var makerPassed = !(maker !== undefined && maker !== null);
-  var modelPassed = !(model !== undefined && model !== null);
-  var versionPassed = !(version !== undefined && version !== null);
+  var makerPassed = (maker !== null);
+  var modelPassed = (model !== null);
+  var versionPassed = (version !== null);
 
   if(makerPassed){
     loadDropDown("inputGroupSelect01",getLEDMakers());
@@ -143,7 +143,7 @@ function getOptionIndex(elementID,optionValue){
       return x;
     }
   }
-  console.log("Element: \"" + elementID + "\" does not contain an option with value= \"" + optionValue + "\".");
+  if(debugFlag){ console.log("Element: \"" + elementID + "\" does not contain an option with value= \"" + optionValue + "\"."); }
 }
 
 function loadDropDown(dropDownId, contents){
@@ -195,6 +195,8 @@ function setSlider(sliderID, min, current, max){
   slider.value = current;
   slider.max = max;
 
+  if(debugFlag){ console.log("Slider '" + sliderID + "' has been set."); }
+
 }
 
 function showLEDInfo(){
@@ -223,7 +225,7 @@ function showLEDInfo(){
   document.getElementById("temp").innerHTML = LEDobj.nom.temp[LEDobj.nom.TjTc] + "&#8451;";
   document.getElementById("nomEfficacy").innerHTML = efficacy + " lm/W";
 
-  document.getElementById("tempSource").innerHTML = LEDobj.nom.temp[LEDobj.nom.TjTc] + ": ";
+  document.getElementById("tempSource").innerHTML = LEDobj.nom.TjTc;
   setSlider("tempSlider",-40,25,125);   // NEED to update this to set slider and toggle based on LED inputs
   setSlider("currentSlider",LEDobj.min.i,LEDobj.nom.i,LEDobj.max.i);
 
