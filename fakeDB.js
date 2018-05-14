@@ -16,11 +16,10 @@ function getLEDModels(maker){
     Bridgelux: "Vero 10,Vero 13,Vero 18,Vero 29" }
 
     if(LEDMaker[maker] === undefined){
-      console.log("LED Maker \"" + maker + "\" does not have any models...")
+      if(debugFlag){console.log("LED Maker \"" + maker + "\" does not have any models...") }
     }
     else{
-      return LEDMaker[maker].split(",");
-    }
+      return LEDMaker[maker].split(","); }
 }
 
 function getLEDVersions(model){
@@ -28,11 +27,10 @@ function getLEDVersions(model){
     "Vero 13": "3000K, 80CRI<,>4000K, 80CRI" }
 
     if(LEDModels[model] === undefined){
-      console.log("LED Model \"" + model + "\" does not have any versions...");
+      if(debugFlag){ console.log("LED Model \"" + model + "\" does not have any versions..."); }
     }
     else{
-      return LEDModels[model].split("<,>");
-    }
+      return LEDModels[model].split("<,>"); }
 }
 
 function getVersionAttrs(model,version){

@@ -27,11 +27,11 @@ class LED {
       this.vf_of_Tj_C = 0;
       this.Rth_of_I = 0; }
     else{
-      Object.assign(this, getVersionAttrs(model,version)); }
-
-      this.now = this.nom;
+      Object.assign(this, getVersionAttrs(model,version));
+      this.now = this.nom; }
 
     // Set Tj based on Tc or Tc based on Tj if full specs are not given
+
   }
 
 // need recursive function to solve for stats when changing I or Tj
@@ -58,24 +58,21 @@ class LED {
   flux_of_Tj(temp){
     var fluxFactor = 0;
     for(var x of this.flux_of_Tj){
-      fluxFactor += this.flux_of_Tj[x] * Math.pow(temp,x);
-    }
+      fluxFactor += this.flux_of_Tj[x] * Math.pow(temp,x); }
     return fluxFactor;
   }
 
   flux_of_I(current){
     var fluxFactor = 0;
     for(var x of this.flux_of_I){
-      fluxFactor += this.flux_of_I[x] * Math.pow(current,x);
-    }
+      fluxFactor += this.flux_of_I[x] * Math.pow(current,x); }
     return fluxFactor;
   }
 
   vf_of_Tj(temp){
     var vfOffSet = 0;
     for(var x of this.vf_to_Tj){
-      vfOffSet += this.vf_of_Tj[x] * Math.pow(temp,x);
-    }
+      vfOffSet += this.vf_of_Tj[x] * Math.pow(temp,x); }
 
     this.now.temp[1] = this.nom.temp[1] + vfOffSet;
   }
@@ -83,8 +80,7 @@ class LED {
   vf_of_I(current){
     var vfFactor = 0;
     for(var x of this.vf_of_I){
-      vfFactor += this.vf_of_I[x] * Math.pow(current,x);
-    }
+      vfFactor += this.vf_of_I[x] * Math.pow(current,x); }
     return vfFactor;
   }
 
@@ -94,7 +90,6 @@ class LED {
 
     return "50,000";
   }
-
 } // end of LED object definition
 
 
