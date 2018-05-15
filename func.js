@@ -1,8 +1,8 @@
 const debugFlag = true;
 
-//
-// LED Object Class Definition
-//
+/*
+ *  LED Object Class Definition
+ */
 
 class LED {
 // https://javascript.info/class
@@ -51,12 +51,13 @@ class LED {
 
   getLum(current, temp){
   // return lumens based on current and temperature
-    return 0;
+    return this.nom.flux * this.fluxFactor(current,temp);
   }
 
   getVf(current, temp){
   // return voltage based on current and temperature
-      return 0;
+    this.getVf(current,temp);
+    return this.nom.vf;
   }
 
   Rth(current = this.now.i){
@@ -68,7 +69,7 @@ class LED {
     return Rth;
   }
 
-  getPow(current, temp){
+  getPow(current = this.now.i, temp = this.now.temp["Tj"]){
     return getVf(current, temp) * current;
   }
 
@@ -106,18 +107,16 @@ class LED {
     this.now.vf = this.nom.vf *vfFactor + vfOffset;
   }
 
-  estLifeTime(I,temp){
-    if(I === undefined) { I = this.nom.i; }
-    if(temp === undefined) { temp = this.nom.temp };
+  estLifeTime(current = this.nom.i,temp = this.nom.temp["Tj"]){
 
-    return "50,000";
+    return "50000";
   }
 } // end of LED object definition
 
 
-//
-// UI functions
-//
+/*
+ *  UI functions
+ */
 
 function pageLoad(){
   var maker = decodeURI(getURIParams("mk"));
