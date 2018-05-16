@@ -30,16 +30,20 @@ class LED {
       Object.assign(this, getVersionAttrs(model,version));
       this.now = this.nom; }
 
+    // Add validation to check that values are not stored as strings
+
     // Set Tj based on Tc or Tc based on Tj if full specs are not given
-    let tempOffset = this.Rth(this.nom.i);
+    let tempOffSet = this.Rth(this.nom.i) * (this.nom.i/1000) * this.nom.vf;
+
+    if(debugFlag){ console.log("LED constructor has run."); }
 
     if(this.nom.TjTc == "Tj"){
       if(this.nom.temp["Tj"] === undefined){ this.nom.temp["Tj"] = 25; }
-      this.nom.temp["Tc"] = this.nom.temp["Tj"] + tempOffset; }
+      this.nom.temp["Tc"] = this.nom.temp["Tj"] + tempOffSet; }
     else if (this.nom.TjTc == "Tc") {
       if(this.nom.temp["Tc"] === undefined){ this.nom.temp["Tc"] = 60; }
-      this.nom.temp["Tj"] = this.nom.temp["Tc"] - tempOffset; }
-    else{ console.log("Unexpected value '" + this.nom.TjTc + "', should be 'Tj' or 'Tc'."); }
+      this.nom.temp["Tj"] = this.nom.temp["Tc"] - tempOffSet; }
+    else{ console.log("Unexpected value '" + this.nom.TjTc + "', should be either 'Tj' or 'Tc'."); }
   }
 
 // need recursive function to solve for stats when changing I or Tj
@@ -49,35 +53,54 @@ class LED {
   changeCurrent(i){ this.now.i +=i; }
   changeTemp(temp){ this.now.temp +=temp; }
 
-  getLum(current, temp){
+  getFlux(){
   // return lumens based on current and temperature
-    return 0;
+    return this.now.flux;
   }
 
-  getVf(current, temp){
+  getVf(){
   // return voltage based on current and temperature
-      return 0;
+      return this.now.vf;
   }
 
-  Rth(current = this.now.i){
-    let Rth = 0;
-
-    for(let x in this.Rth_of_I){
-      Rth += this.Rth_of_I[x] * Math.pow(current,x); }
-
-    return Rth;
+  getPow(){
+    return this.now.vf * this.now.i / 1000;
   }
 
-  getPow(current, temp){
-    return getVf(current, temp) * current;
+  calcLED(current = this.nom.i, temp = this.nom.temp["Tj"], tempType = "Tj"){
+    this.setTemps(current, temp, tempType);
+    this.setVf(current, temp, tempType);
+
+    console.assert(tempType == "Tj" || tempType == "Tc", "TempType '" + tempType + "' is invalid. Should be 'Tj' or 'Tc'.");
+
+    this.now.flux = this.fluxFactor(current, this.now.temp["Tj"]) * this.nom.flux;
+    this.now.i = current;
   }
 
-  setTemps(current = this.nom.i, tempType = "Tj"){
+  setTemps(current = this.now.i, temp = this.now.temp["Tj"], tempType = "Tj"){
 
-    let tempOffset = Rth(current);
+    if(tempType === null){ tempType = "Tj";}
 
-    if(tempType == "Tj"){ his.now.temp["Tc"] = this.now.temp["Tj"] + Rth; }
-    else if (tempType == "Tc"){ this.now.temp["Tj"] = this.now.temp["Tc"] - Rth; }
+    let power = this.setVf(current, temp) * current / 1000;
+    let tempOffset = this.Rth(current) * power;
+
+    if(tempType == "Tj"){ this.now.temp["Tc"] = this.now.temp["Tj"] + tempOffset; }
+    else if (tempType == "Tc"){ this.now.temp["Tj"] = this.now.temp["Tc"] - tempOffset; }
+  }
+
+  setVf(current = this.now.i, temp = this.now.temp["Tj"]){
+    let vfFactor = 0;
+    let vfOffSet = 0;
+
+    for(var x in this.vf_of_I){
+      vfFactor += this.vf_of_I[x] * Math.pow(current,x); }
+
+    for(var x in this.vf_to_Tj){
+      vfOffSet += this.vf_of_Tj[x] * Math.pow(temp,x); }
+
+    this.now.vf = this.nom.vf * vfFactor + vfOffSet;
+
+    return this.now.vf;
   }
 
   fluxFactor(current = this.now.i, Tj = this.now.temp["Tj"]){
@@ -93,21 +116,17 @@ class LED {
     return fluxFactorI * fluxFactorTemp;
   }
 
-  vfFactor(current = this.now.i, temp = this.now.temp["Tj"]){
-    let vfFactor = 0;
-    let vfOffSet = 0;
+  Rth(current = this.now.i){
+    let Rth = 0;
 
-    for(var x in this.vf_of_I){
-      vfFactor += this.vf_of_I[x] * Math.pow(current,x); }
+    for(let x in this.Rth_of_I){
+      Rth += this.Rth_of_I[x] * Math.pow(current,x); }
 
-    for(var x in this.vf_to_Tj){
-      vfOffSet += this.vf_of_Tj[x] * Math.pow(temp,x); }
-
-    this.now.vf = this.nom.vf *vfFactor + vfOffset;
+    return Rth;
   }
 
-  estLifeTime(I,temp){
-    if(I === undefined) { I = this.nom.i; }
+  estLifeTime(current,temp){
+    if(current === undefined) { current = this.nom.i; }
     if(temp === undefined) { temp = this.nom.temp };
 
     return "50,000";
@@ -232,10 +251,8 @@ function showLEDInfo(){
 
   let tableVis = document.getElementById("LED-info");
   let sliderVis = document.getElementById("slider-section");
-  let resultVis = document.getElementById("result-section");
   if(tableVis.style.display = "none"){ tableVis.style.display = "block";}
   if(sliderVis.style.display = "none"){ sliderVis.style.display = "block";}
-  if(resultVis.style.display = "none"){ resultVis.style.display = "block";}
 
   document.getElementById("LEDImage").src = "assets/LED-" + model + ".jpg";
   document.getElementById("partNumber").innerHTML = LEDobj.partNumber;
@@ -256,34 +273,44 @@ function showLEDInfo(){
 }
 
 function calcResults(){
+  "use strict";
   let runFlag = false;
   let runCount = 0;
+  let message = "";
 
   return function(){
-    let message = "";
-    let tempSource = document.getElementById("tempSource").innerHTML;
     runCount++;
+    if(runCount == 1){ message = "once"; }
+    else{ message = runCount + " times"; }
 
-    if(runFlag){
-      LEDobj.now.TjTc = tempSource;
-      LEDobj.now.temp[LEDobj.now.TjTc] = document.getElementById("tempSlider").value;
-      LEDobj.now.i = document.getElementById("currentSlider").value;
+    // pull new inputs from the sliders
+    let tempSource = document.getElementById("tempSource").innerHTML;
+    let current = document.getElementById("currentSlider").value;
+    let temp = {};
+    temp[tempSource] = document.getElementById("tempSlider").value;
 
-      var flux = LEDobj.now.flux;
-      var vf = LEDobj.now.vf;
-      var power = vf * LEDobj.now.i/1000;
-      document.getElementById("calcFlux").innerHTML = roundTo(flux,-1);
-      document.getElementById("calcPower").innerHTML = roundTo(power,1);
-      document.getElementById("calcEfficacy").innerHTML = roundTo(flux/power,1);
-      document.getElementById("calcLifeTime").innerHTML = LEDobj.estLifeTime();
-
-      message = runCount + " times"; }
-    else{
-        tempSource = LEDobj.nom.TjTc;
-        runFlag = true;
-        message = "once"; }
+    // calculate new LED state
+    LEDobj.calcLED(current,temp[tempSource],tempSource);
 
     if(debugFlag){ console.log("Results have been calculated " + message + ". " + LEDobj.nom.TjTc + ": " + LEDobj.now.temp[LEDobj.nom.TjTc] + " and I: " + LEDobj.now.i + " mA."); }
+    console.log("Current status of LED: Vf=" + LEDobj.now.vf + " Flux=" + LEDobj.now.flux + " Power=" + LEDobj.getPow() + " Efficacy=" + LEDobj.getFlux() / LEDobj.getPow() + ".");
+
+    // show results in the output section
+    var flux = LEDobj.getFlux();
+    var vf = LEDobj.getVf();
+    var power = LEDobj.getPow();
+    document.getElementById("calcFlux").innerHTML = roundTo(flux,-1);
+    document.getElementById("calcPower").innerHTML = roundTo(power,1);
+    document.getElementById("calcEfficacy").innerHTML = roundTo(flux/power,1);
+    document.getElementById("calcLifeTime").innerHTML = LEDobj.estLifeTime();
+
+    // make result section visible on first run
+    if(!runFlag){
+      let resultVis = document.getElementById("result-section");
+      if(resultVis.style.display = "none"){ resultVis.style.display = "block";}
+      runFlag = true;
+      if(debugFlag){ console.log("Results calculated and shown."); }
+    }
   }
 }
 

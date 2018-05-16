@@ -46,15 +46,15 @@ function getVersionAttrs(model,version){
         CCT:3000,
         CRI:80,
         TjTc:"Tj",
-        temp:{"Tj":"25"}},
+        temp:{"Tj":25}},
       min:{
         vf:32.2,
         flux:4500,
-        temp:{"Tc":"-40"}},
+        temp:{"Tc":-40}},
       max:{
         vf:37.4,
         i:1800,
-        temp:{"Tj":"105"}},
+        temp:{"Tj":105}},
       typ:{
         CCT:3000,
         CRI:80,
