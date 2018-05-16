@@ -25,8 +25,7 @@ class LED {
       this.vf_of_Tj_C = 0;
       this.Rth_of_I = 0; }
     else{
-      Object.assign(this, getVersionAttrs(model,version));
-      this.now = this.nom; }
+      Object.assign(this, getVersionAttrs(model,version)); }
 
     // Add validation to check that values are not stored as strings
 
@@ -66,18 +65,20 @@ class LED {
   }
 
   calcLED(current = this.nom.i, temp = this.nom.temp["Tj"], tempType = "Tj"){
+    console.log("On entering calcLED: ", this.nom);
     this.setTemps(current, temp, tempType);
+    console.log("After setTemps: ", this.nom);
     this.setVf(current, temp, tempType);
+    console.log("after setVf: ", this.nom);
 
     console.assert(tempType == "Tj" || tempType == "Tc", "TempType '" + tempType + "' is invalid. Should be 'Tj' or 'Tc'.");
 
     this.now.flux = this.fluxFactor(current, this.now.temp["Tj"]) * this.nom.flux;
     this.now.i = current;
+    console.log("On leaving calcLED: ", this.nom);
   }
 
   setTemps(current = this.now.i, temp = this.now.temp["Tj"], tempType = "Tj"){
-
-    if(tempType === null){ tempType = "Tj";}
 
     let power = this.setVf(current, temp) * current / 1000;
     let tempOffset = this.Rth(current) * power;

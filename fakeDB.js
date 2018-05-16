@@ -55,6 +55,14 @@ function getVersionAttrs(model,version){
         vf:37.4,
         i:1800,
         temp:{"Tj":105,"Tc":125}},
+      now:{
+        vf:0,
+        i:0,
+        flux:0,
+        CCT:0,
+        CRI:0,
+        TjTc:"Tj",
+        temp:{"Tj":25}},
       typ:{
         CCT:3000,
         CRI:80,
@@ -92,4 +100,22 @@ function getVersionAttrs(model,version){
     //CIEy_of_Tj
 
     return versions[version];
+}
+
+function testInputs(){
+  let tests = {
+    input1:{
+      i:900,
+      temp:{"Tj":25} },
+    output1:{
+      flux:5000,
+      vf:34.8 },
+    input2:{
+      i:600,
+      temp:{"Tj":25} },
+    output2:{
+      flux:0,
+      vf:0 }
+  }
+
 }

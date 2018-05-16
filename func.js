@@ -40,6 +40,7 @@ function pageLoad(){
 
   if(debugFlag){ console.log("Page successfully loaded."); }
 
+  console.log("After pageLoad: ", LEDobj.nom);
 }
 
 function getOptionIndex(elementID,optionValue){
@@ -154,6 +155,7 @@ function calcResults(){
     temp[tempSource] = document.getElementById("tempSlider").value;
 
     // calculate new LED state
+    console.log("Before entering calcLED: ", LEDobj.nom);
     LEDobj.calcLED(current,temp[tempSource],tempSource);
 
     if(debugFlag){ console.log("Results have been calculated " + message + ". " + LEDobj.nom.TjTc + ": " + LEDobj.now.temp[LEDobj.nom.TjTc] + " and I: " + LEDobj.now.i + " mA."); }
