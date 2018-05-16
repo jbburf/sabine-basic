@@ -1,8 +1,8 @@
 const debugFlag = true;
 
-//
-// LED Object Class Definition
-//
+/*
+ *  LED Object Class Definition
+ */
 
 class LED {
 // https://javascript.info/class
@@ -55,12 +55,21 @@ class LED {
 
   getFlux(){
   // return lumens based on current and temperature
+<<<<<<< HEAD
     return this.now.flux;
+=======
+    return this.nom.flux * this.fluxFactor(current,temp);
+>>>>>>> 0456b3b12e6b1f85fb27c16752a0b690285db10d
   }
 
   getVf(){
   // return voltage based on current and temperature
+<<<<<<< HEAD
       return this.now.vf;
+=======
+    this.getVf(current,temp);
+    return this.nom.vf;
+>>>>>>> 0456b3b12e6b1f85fb27c16752a0b690285db10d
   }
 
   getPow(){
@@ -77,6 +86,7 @@ class LED {
     this.now.i = current;
   }
 
+<<<<<<< HEAD
   setTemps(current = this.now.i, temp = this.now.temp["Tj"], tempType = "Tj"){
 
     if(tempType === null){ tempType = "Tj";}
@@ -86,6 +96,10 @@ class LED {
 
     if(tempType == "Tj"){ this.now.temp["Tc"] = this.now.temp["Tj"] + tempOffset; }
     else if (tempType == "Tc"){ this.now.temp["Tj"] = this.now.temp["Tc"] - tempOffset; }
+=======
+  getPow(current = this.now.i, temp = this.now.temp["Tj"]){
+    return getVf(current, temp) * current;
+>>>>>>> 0456b3b12e6b1f85fb27c16752a0b690285db10d
   }
 
   setVf(current = this.now.i, temp = this.now.temp["Tj"]){
@@ -125,18 +139,22 @@ class LED {
     return Rth;
   }
 
+<<<<<<< HEAD
   estLifeTime(current,temp){
     if(current === undefined) { current = this.nom.i; }
     if(temp === undefined) { temp = this.nom.temp };
+=======
+  estLifeTime(current = this.nom.i,temp = this.nom.temp["Tj"]){
+>>>>>>> 0456b3b12e6b1f85fb27c16752a0b690285db10d
 
-    return "50,000";
+    return "50000";
   }
 } // end of LED object definition
 
 
-//
-// UI functions
-//
+/*
+ *  UI functions
+ */
 
 function pageLoad(){
   var maker = decodeURI(getURIParams("mk"));

@@ -54,7 +54,11 @@ function getVersionAttrs(model,version){
       max:{
         vf:37.4,
         i:1800,
+<<<<<<< HEAD
         temp:{"Tj":105}},
+=======
+        temp:{"Tj":105,"Tc":125}},
+>>>>>>> 0456b3b12e6b1f85fb27c16752a0b690285db10d
       typ:{
         CCT:3000,
         CRI:80,
