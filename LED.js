@@ -45,11 +45,6 @@ class LED {
 
 // need recursive function to solve for stats when changing I or Tj
 
-  setCurrent(i){ this.now.i = i; }
-  setTemp(temp){ this.now.temp = temp; }
-  changeCurrent(i){ this.now.i +=i; }
-  changeTemp(temp){ this.now.temp +=temp; }
-
   getFlux(){
   // return lumens based on current and temperature
     return this.now.flux;
@@ -92,8 +87,7 @@ class LED {
     let vfFactor = 0;
     let vfOffSet = 0;
 
-    for(var x in this.vf_of_I){
-      vfFactor += this.vf_of_I[x] * Math.pow(current,x); }
+      vfFactor = this.vf_of_I[1] * Math.log(current) + this.vf_of_I[0];
 
     for(var x in this.vf_to_Tj){
       vfOffSet += this.vf_of_Tj[x] * Math.pow(temp,x); }
