@@ -68,7 +68,7 @@ class LED {
 
     console.assert(tempType == "Tj" || tempType == "Tc", "TempType '" + tempType + "' is invalid. Should be 'Tj' or 'Tc'.");
 
-    this.now.flux = this.fluxFactor(current, this.now.temp["Tj"]) * this.nom.flux;
+    this.now.flux = this.fluxFactor(current, temp) * this.nom.flux;
     this.now.i = current;
     console.log("On leaving calcLED: ", this.nom);
   }
@@ -78,8 +78,14 @@ class LED {
     let power = this.setVf(current, temp) * current / 1000;
     let tempOffset = this.Rth(current) * power;
 
-    if(tempType == "Tj"){ this.now.temp["Tc"] = this.now.temp["Tj"] + tempOffset; }
-    else if (tempType == "Tc"){ this.now.temp["Tj"] = this.now.temp["Tc"] - tempOffset; }
+    if(tempType == "Tj"){
+      this.now.TjTc = "Tj";
+      this.now.temp["Tj"] = temp;
+      this.now.temp["Tc"] = temp + tempOffset; }
+    else if(tempType == "Tc"){
+      this.now.TjTc = "Tc";
+      this.now.temp["Tc"] = temp;
+      this.now.temp["Tj"] = temp - tempOffset; }
 }
 
 
@@ -89,8 +95,7 @@ class LED {
 
       vfFactor = this.vf_of_I[1] * Math.log(current) + this.vf_of_I[0];
 
-    for(var x in this.vf_to_Tj){
-      vfOffSet += this.vf_of_Tj[x] * Math.pow(temp,x); }
+      vfOffSet += (temp - 25) * this.vf_of_Tj / 1000;
 
     this.now.vf = this.nom.vf * vfFactor + vfOffSet;
 
@@ -102,10 +107,10 @@ class LED {
     var fluxFactorTemp = 0;
 
     for(var x in this.flux_of_Tj){
-      fluxFactorTemp += this.flux_of_Tj[x] * Math.pow(Tj,x); }
+      fluxFactorTemp += this.flux_of_Tj[x] * Math.pow(Tj, x); }
 
     for(var x in this.flux_of_I){
-      fluxFactorI += this.flux_of_I[x] * Math.pow(current,x); }
+      fluxFactorI += this.flux_of_I[x] * Math.pow(current, x); }
 
     return fluxFactorI * fluxFactorTemp;
   }

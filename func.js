@@ -137,6 +137,12 @@ function showLEDInfo(){
 
 }
 
+function toggleTemp(){
+  //Add part where slider resets to different max/min values and takes on the equivalent of the Tc or Tj based on the current value
+
+  calcResults();
+}
+
 function calcResults(){
   "use strict";
   let runFlag = false;
@@ -156,9 +162,10 @@ function calcResults(){
 
     // calculate new LED state
     console.log("Before entering calcLED: ", LEDobj.nom);
+    console.log("And i: " + current + ", tempSource:" + tempSource + ", Temp:" + temp[tempSource] + ".");
     LEDobj.calcLED(current,temp[tempSource],tempSource);
 
-    if(debugFlag){ console.log("Results have been calculated " + message + ". " + LEDobj.nom.TjTc + ": " + LEDobj.now.temp[LEDobj.nom.TjTc] + " and I: " + LEDobj.now.i + " mA."); }
+    if(debugFlag){ console.log("Results have been calculated " + message + ". " + LEDobj.now.TjTc + ": " + LEDobj.now.temp[LEDobj.nom.TjTc] + " and I: " + LEDobj.now.i + " mA."); }
     console.log("Current status of LED: Vf=" + LEDobj.now.vf + " Flux=" + LEDobj.now.flux + " Power=" + LEDobj.getPow() + " Efficacy=" + LEDobj.getFlux() / LEDobj.getPow() + ".");
 
     // show results in the output section

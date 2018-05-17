@@ -81,7 +81,7 @@ function getVersionAttrs(model,version){
       vf_of_I:{
         0:0.59529185688,
         1:0.059241490565 },
-      vf_of_Tj:-2.4e-2,
+      vf_of_Tj:-14.9,
       Rth_of_I:{
         0:1.3035932093,
         1:6.2516135462e-4,

@@ -34,4 +34,4 @@ setEventHandler("TjTcToggle","change",function() { var tempType = document.getEl
 //Calculate new values based in inputs from sliders
 setEventHandler("tempSlider","change",calcResults());
 setEventHandler("currentSlider","change",calcResults());
-setEventHandler("TjTcToggle","change",calcResults());
+setEventHandler("TjTcToggle","change",toggleTemp());
