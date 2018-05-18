@@ -50,7 +50,7 @@ function getVersionAttrs(model,version){
       min:{
         vf:32.2,
         flux:4500,
-        temp:{"Tc":-40}},
+        temp:{"Tj":-40, "Tc":-40}},
       max:{
         vf:37.4,
         i:1800,
@@ -76,8 +76,7 @@ function getVersionAttrs(model,version){
       flux_of_Tj:{
         0:1.0392004202,
         1:-1.5188515406e-3,
-        2:-2.0168067227e-6,
-        3:0 },
+        2:-2.0168067227e-6 },
       vf_of_I:{
         0:0.59529185688,
         1:0.059241490565 },

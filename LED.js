@@ -4,27 +4,36 @@
 
 class LED {
 // https://javascript.info/class
-  constructor(name,model,version){
+  constructor(name, model = null, version = null){
     // create optional parameters to set basic values
     this.name = name;
     this.model = model;
     this.version = version;
+    this.min = {
+      vf:0,
+      flux:0,
+      temp:{"Tj":0, "Tc":0}};
+    this.nom = {
+      vf:0,
+      i:0,
+      flux:0,
+      CCT:0,
+      CRI:0,
+      TjTc:"Tj",
+      temp:{"Tj":0}};
+    this.max = {
+      vf:0,
+      i:0,
+      temp:{"Tj":0,"Tc":0}};
+    this.flux_of_I = {};
+    this.flux_of_Tj = {};
+    this.vf_of_I = {};
+    this.vf_of_Tj = 0;
+    this.Rth_of_I = {};
 
-    if(model === undefined || version === undefined){
-      this.make = "";
-      this.model = "";
-      this.version = "";
-      this.nom.vf = 0
-      this.nom.i = 0;
-      this.nom.TjTc = "Tj";
-      this.nom.temp["Tj"] = 25;
-      this.nom.flux = 0;
-      this.flux_of_I = 0;
-      this.flux_of_Tj_C = 0;
-      this.vf_of_I_C = 0;
-      this.vf_of_Tj_C = 0;
-      this.Rth_of_I = 0; }
-    else{
+    if(model !== null && version !== null){
+      this.model = model;
+      this.version = version;
       Object.assign(this, getVersionAttrs(model,version)); }
 
     // Add validation to check that values are not stored as strings
@@ -43,6 +52,23 @@ class LED {
     else{ console.log("Unexpected value '" + this.nom.TjTc + "', should be either 'Tj' or 'Tc'."); }
   }
 
+  change(name, model, version){
+    this.model = model;
+    this.version = version;
+    Object.assign(this, getVersionAttrs(model,version));
+
+    let tempOffSet = this.Rth(this.nom.i) * (this.nom.i/1000) * this.nom.vf;
+
+    if(debugFlag){ console.log("LED has been reloaded as model: " + model + ", and version: " + version + "."); }
+
+    if(this.nom.TjTc == "Tj"){
+      if(this.nom.temp["Tj"] === undefined){ this.nom.temp["Tj"] = 25; }
+      this.nom.temp["Tc"] = this.nom.temp["Tj"] + tempOffSet; }
+    else if (this.nom.TjTc == "Tc") {
+      if(this.nom.temp["Tc"] === undefined){ this.nom.temp["Tc"] = 60; }
+      this.nom.temp["Tj"] = this.nom.temp["Tc"] - tempOffSet; }
+    else{ console.log("Unexpected value '" + this.nom.TjTc + "', should be either 'Tj' or 'Tc'."); }
+  }
 // need recursive function to solve for stats when changing I or Tj
 
   getFlux(){
@@ -88,6 +114,10 @@ class LED {
       this.now.temp["Tj"] = temp - tempOffset; }
 }
 
+  setTemp(temp = this.nom.temp[this.nom.TjTc], tempType = this.nom.TjTc){
+    this.now.TjTc = tempType;
+    this.now.temp[tempType] = temp;
+  }
 
   setVf(current = this.now.i, temp = this.now.temp["Tj"]){
     let vfFactor = 0;

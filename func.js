@@ -2,6 +2,8 @@
  *  UI functions
  */
 
+LEDobj = new LED("LED1");
+
 function pageLoad(){
   var maker = decodeURI(getURIParams("mk"));
   var model = decodeURI(getURIParams("md"));
@@ -40,62 +42,11 @@ function pageLoad(){
 
   if(debugFlag){ console.log("Page successfully loaded."); }
 
-  console.log("After pageLoad: ", LEDobj.nom);
+  console.log("After pageLoad: ", LEDobj);
 }
 
-function getOptionIndex(elementID,optionValue){
-  for(var x in document.getElementById(elementID).options){
-    if(document.getElementById(elementID).options[x].value == optionValue){
-      return x;
-    }
-  }
-  if(debugFlag){ console.log("Element: \"" + elementID + "\" does not contain an option with value= \"" + optionValue + "\"."); }
-}
-
-function loadDropDown(dropDownId, contents){
-  var targetDropDown = document.getElementById(dropDownId);
-
-  clearDropDown(dropDownId);
-
-// Add original option back, "Choose..."
-  var newOption = document.createElement("option");
-  newOption.text = "Choose...";
-  newOption.selected = true;
-  newOption.disabled = true;
-  targetDropDown.add(newOption);
-
-// loop to add all elements to dropdown based on original dropdown input
-  for (var x in contents) {
-    var newOption = document.createElement("option");
-    newOption.text = contents[x];
-    newOption.value = contents[x];
-    targetDropDown.add(newOption);
-    }
-}
-
-function dropDownSelection(dropDownId){
-  return document.getElementById(dropDownId).value;
-}
-
-function clearDropDown(dropDownId){
-  var dropDown = document.getElementById(dropDownId);
-
-  for (var x in dropDown) {
-    dropDown.remove(x);
-  }
-}
-
-function changeBSProgressBar(progressBarId, newValue){
-  $('#' + progressBarId).width(newValue + "%").attr("aria-valuenow", newValue);
-
-    if(debugFlag){ console.log("Progress slider set to: " + newValue + "%."); }
-
-}
-
-function setSlider(sliderID, min, current, max){
+function setSlider(sliderID, min = -40, current = 25, max = 105){
   var slider = document.getElementById(sliderID);
-
-  document.getElementById(sliderID + "Value").innerHTML = current;
 
   slider.min = min;
   slider.value = current;
@@ -109,7 +60,7 @@ function showLEDInfo(){
   var model = document.getElementById("inputGroupSelect02").value;
   var version = document.getElementById("inputGroupSelect03").value;
 
-  LEDobj = new LED("LED1",model,version);
+  LEDobj.change("LED1",model,version);
 
   var power = roundTo(LEDobj.nom.vf * LEDobj.nom.i/1000,1);
   var efficacy = roundTo(LEDobj.nom.flux / power,0);
@@ -130,15 +81,50 @@ function showLEDInfo(){
   document.getElementById("nomEfficacy").innerHTML = efficacy + " lm/W";
 
   document.getElementById("tempSource").innerHTML = LEDobj.nom.TjTc;
-  setSlider("tempSlider",-40,25,125);   // NEED to update this to set slider and toggle based on LED inputs
+  setSlider("tempSlider",LEDobj.min.temp[LEDobj.nom.TjTc],LEDobj.nom.temp[LEDobj.nom.TjTc],LEDobj.max.temp[LEDobj.nom.TjTc]);   // NEED to update this to set slider and toggle based on LED inputs
   setSlider("currentSlider",LEDobj.min.i,LEDobj.nom.i,LEDobj.max.i);
 
   if(debugFlag){ console.log("LED info shown for selected LED."); }
-
 }
 
 function toggleTemp(){
+  "use strict";
   //Add part where slider resets to different max/min values and takes on the equivalent of the Tc or Tj based on the current value
+
+  //Toggle Tj to Tc based on toggle values
+  let tempSource = document.getElementById("tempSource").innerHTML;
+  let tempToggle = document.getElementById("TjTcToggle").checked;
+  let currentTemp = document.getElementById("tempSliderValue").innerHTML;
+
+  if(tempToggle){ tempSource = "Tc" }
+  else{ tempSource = "Tj" }
+
+  console.log("Min Tj: ", LEDobj);
+
+  let min = {
+    "Tj":LEDobj.min.temp["Tj"],
+    "Tc":LEDobj.min.temp["Tc"] };
+  let max = {
+    "Tj":LEDobj.max.temp["Tj"],
+    "Tc":LEDobj.max.temp["Tc"] };
+
+  /* #HELP Need more robust way of checking if property is defined
+  These didn't work: https://toddmotto.com/methods-to-determine-if-an-object-has-a-given-property/
+
+  fixed by setting all properties in the fakeDB call, this is not a robust solution
+
+  if(LEDobj.min.temp["Tj"] === undefined){ min["Tj"] = -40; }
+  else{ min["Tj"] = LEDobj.min.temp["Tj"]; }
+  if(LEDobj.max.temp["Tj"] === undefined){ max["Tj"] = 105; }
+  else{ max["Tj"] = LEDobj.max.temp["Tj"]; }
+  if(LEDobj.min.temp["Tc"] === undefined){ min["Tc"] = -40; }
+  else{ min["Tc"] = LEDobj.min.temp["Tc"]; }
+  if(LEDobj.max.temp["Tc"] === undefined){ max["Tc"] = 125; }
+  else{ max["Tc"] = LEDobj.max.temp["Tc"]; }
+
+  */
+
+  setSlider("tempSlider", min[tempSource], currentTemp,max[tempSource]);
 
   calcResults();
 }
@@ -188,8 +174,56 @@ function calcResults(){
 }
 
 //
-// General functions
+// Helper functions
 //
+function getOptionIndex(elementID,optionValue){
+  for(var x in document.getElementById(elementID).options){
+    if(document.getElementById(elementID).options[x].value == optionValue){
+      return x;
+    }
+  }
+  if(debugFlag){ console.log("Element: \"" + elementID + "\" does not contain an option with value= \"" + optionValue + "\"."); }
+}
+
+function loadDropDown(dropDownId, contents){
+  var targetDropDown = document.getElementById(dropDownId);
+
+  clearDropDown(dropDownId);
+
+// Add original option back, "Choose..."
+  var newOption = document.createElement("option");
+  newOption.text = "Choose...";
+  newOption.selected = true;
+  newOption.disabled = true;
+  targetDropDown.add(newOption);
+
+// loop to add all elements to dropdown based on original dropdown input
+  for (var x in contents) {
+    var newOption = document.createElement("option");
+    newOption.text = contents[x];
+    newOption.value = contents[x];
+    targetDropDown.add(newOption);
+    }
+}
+
+function dropDownSelection(dropDownId){
+  return document.getElementById(dropDownId).value;
+}
+
+function clearDropDown(dropDownId){
+  var dropDown = document.getElementById(dropDownId);
+
+  for (var x in dropDown) {
+    dropDown.remove(x);
+  }
+}
+
+function changeBSProgressBar(progressBarId, newValue){
+  $('#' + progressBarId).width(newValue + "%").attr("aria-valuenow", newValue);
+
+    if(debugFlag){ console.log("Progress slider set to: " + newValue + "%."); }
+
+}
 
 function getURIParams(param) {
   // from https://www.creativejuiz.fr/blog/en/javascript-en/read-url-get-parameters-with-javascript

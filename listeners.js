@@ -4,13 +4,11 @@
 function setEventHandler(obj, name, fn) {
 // Inputs: element ID, event name, function to execute
     if (typeof obj == "string") {
-        obj = document.getElementById(obj);
-    }
+        obj = document.getElementById(obj); }
     if (obj.addEventListener) {
-        return(obj.addEventListener(name, fn));
-    } else if (obj.attachEvent) {
-        return(obj.attachEvent("on" + name, function() {return(fn.call(obj));}));
-    }
+      return(obj.addEventListener(name, fn)); }
+    else if (obj.attachEvent) {
+      return(obj.attachEvent("on" + name, function() {return(fn.call(obj));})); }
 }
 
 // register your event handler
@@ -28,10 +26,7 @@ setEventHandler("inputGroupSelect03","change",function () {showLEDInfo()});
 setEventHandler("tempSlider","input",function() { document.getElementById("tempSliderValue").innerHTML = document.getElementById("tempSlider").value;});
 setEventHandler("currentSlider","input",function() { document.getElementById("currentSliderValue").innerHTML = document.getElementById("currentSlider").value;});
 
-//Toggle Tj to Tc based on toggle values
-setEventHandler("TjTcToggle","change",function() { var tempType = document.getElementById("tempSource"); if(this.checked) {tempType.innerHTML = "Tc";} else { tempType.innerHTML = "Tj";}});
-
-//Calculate new values based in inputs from sliders
+//Calculate new values based in inputs from sliders and toggle
 setEventHandler("tempSlider","change",calcResults());
 setEventHandler("currentSlider","change",calcResults());
 setEventHandler("TjTcToggle","change",toggleTemp());
