@@ -15,7 +15,7 @@ class LED {
   version: string;
   model: string;
   name: string;
-// https://javascript.info/class
+  // https://javascript.info/class
   constructor(name: string, model: string = null, version: string = null){
     // create optional parameters to set basic values
     this.name = name;

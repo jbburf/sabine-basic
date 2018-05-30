@@ -1,11 +1,14 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-     "noImplicitAny" : true },
- "compilerOptions": {
-        "module": "commonjs",
-        "noImplicitAny": true,
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "sourceMap": true }
+      "target": "es2015",
+      "module": "commonjs",
+      "noImplicitAny": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "rootDir": "/src/",
+      "outFile": "/www/out.js",
+      "outDir": "/www/" },
+      "_reference": "https://www.typescriptlang.org/docs/handbook/tsconfig-json.html"
 }
