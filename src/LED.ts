@@ -15,7 +15,7 @@ class LED {
   version: string;
   model: string;
   name: string;
-  // https://javascript.info/class
+
   constructor(name: string, model: string = null, version: string = null){
     // create optional parameters to set basic values
     this.name = name;
@@ -64,6 +64,61 @@ class LED {
     else{ console.log("Unexpected value '" + this.nom.TjTc + "', should be either 'Tj' or 'Tc'."); }
   }
 
+  private setTemp(temp = this.nom.temp[this.nom.TjTc], tempType = this.nom.TjTc){
+    this.now.TjTc = tempType;
+    this.now.temp[tempType] = temp;
+  }
+
+  private setTemps(current: number = this.now.i, temp: number = this.now.temp["Tj"], tempType: string = "Tj"){
+
+    let power = this.setVf(current, temp) * current / 1000;
+    let tempOffset = this.Rth(current) * power;
+
+    if(tempType == "Tj"){
+      this.now.TjTc = "Tj";
+      this.now.temp["Tj"] = temp;
+      this.now.temp["Tc"] = temp + tempOffset; }
+    else if(tempType == "Tc"){
+      this.now.TjTc = "Tc";
+      this.now.temp["Tc"] = temp;
+      this.now.temp["Tj"] = temp - tempOffset; }
+}
+
+  private setVf(current = this.now.i, temp = this.now.temp[this.now.TjTc], tempType: string = this.now.TjTc){
+    let vfFactor = 0;
+    let vfOffSet = 0;
+
+      vfFactor = this.vf_of_I[1] * Math.log(current) + this.vf_of_I[0];
+
+      vfOffSet += (temp - 25) * this.vf_of_Tj / 1000;
+
+    this.now.vf = this.nom.vf * vfFactor + vfOffSet;
+
+    return this.now.vf;
+  }
+
+  private fluxFactor(current = this.now.i, Tj = this.now.temp["Tj"]){
+    var fluxFactorI = 0;
+    var fluxFactorTemp = 0;
+
+    for(var x in this.flux_of_Tj){
+      fluxFactorTemp += this.flux_of_Tj[x] * Math.pow(Tj, x); }
+
+    for(var x in this.flux_of_I){
+      fluxFactorI += this.flux_of_I[x] * Math.pow(current, x); }
+
+    return fluxFactorI * fluxFactorTemp;
+  }
+
+  private Rth(current = this.now.i){
+    let Rth = 0;
+
+    for(let x in this.Rth_of_I){
+      Rth += this.Rth_of_I[x] * Math.pow(current,x); }
+
+    return Rth;
+  }
+
   change(name: string, model: string, version: string){
     this.model = model;
     this.version = version;
@@ -83,21 +138,21 @@ class LED {
   }
 // need recursive function to solve for stats when changing I or Tj
 
-  getFlux(){
+  public getFlux(){
   // return lumens based on current and temperature
     return this.now.flux;
   }
 
-  getVf(){
+  public getVf(){
   // return voltage based on current and temperature
     return this.now.vf;
   }
 
-  getPow(){
+  public getPow(){
     return this.now.vf * this.now.i / 1000;
   }
 
-  calcLED(current = this.nom.i, temp = this.nom.temp["Tj"], tempType = "Tj"){
+  public calcLED(current = this.nom.i, temp = this.nom.temp["Tj"], tempType = "Tj"){
     console.log("On entering calcLED: ", this.nom);
     this.setTemps(current, temp, tempType);
     console.log("After setTemps: ", this.nom);
@@ -110,62 +165,7 @@ class LED {
     this.now.i = current;
     console.log("On leaving calcLED: ", this.nom);
   }
-
-  setTemps(current: number = this.now.i, temp: number = this.now.temp["Tj"], tempType: string = "Tj"){
-
-    let power = this.setVf(current, temp) * current / 1000;
-    let tempOffset = this.Rth(current) * power;
-
-    if(tempType == "Tj"){
-      this.now.TjTc = "Tj";
-      this.now.temp["Tj"] = temp;
-      this.now.temp["Tc"] = temp + tempOffset; }
-    else if(tempType == "Tc"){
-      this.now.TjTc = "Tc";
-      this.now.temp["Tc"] = temp;
-      this.now.temp["Tj"] = temp - tempOffset; }
-}
-
-  setTemp(temp = this.nom.temp[this.nom.TjTc], tempType = this.nom.TjTc){
-    this.now.TjTc = tempType;
-    this.now.temp[tempType] = temp;
-  }
-
-  setVf(current = this.now.i, temp = this.now.temp[this.now.TjTc], tempType: string = this.now.TjTc){
-    let vfFactor = 0;
-    let vfOffSet = 0;
-
-      vfFactor = this.vf_of_I[1] * Math.log(current) + this.vf_of_I[0];
-
-      vfOffSet += (temp - 25) * this.vf_of_Tj / 1000;
-
-    this.now.vf = this.nom.vf * vfFactor + vfOffSet;
-
-    return this.now.vf;
-  }
-
-  fluxFactor(current = this.now.i, Tj = this.now.temp["Tj"]){
-    var fluxFactorI = 0;
-    var fluxFactorTemp = 0;
-
-    for(var x in this.flux_of_Tj){
-      fluxFactorTemp += this.flux_of_Tj[x] * Math.pow(Tj, x); }
-
-    for(var x in this.flux_of_I){
-      fluxFactorI += this.flux_of_I[x] * Math.pow(current, x); }
-
-    return fluxFactorI * fluxFactorTemp;
-  }
-
-  Rth(current = this.now.i){
-    let Rth = 0;
-
-    for(let x in this.Rth_of_I){
-      Rth += this.Rth_of_I[x] * Math.pow(current,x); }
-
-    return Rth;
-  }
-
+  
   estLifeTime(current = this.nom.i,temp = this.nom.temp["Tj"]){
     if(current === undefined) { current = this.nom.i; }
     if(temp === undefined) { temp = this.nom.temp };
