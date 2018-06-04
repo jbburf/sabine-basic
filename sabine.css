@@ -1,32 +1,15 @@
-.container{
+.sbContainer{
   height: 100%;
   display: grid;
   grid-gap: 3px;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: 40px repeat(10, 1fr) 40px;
   grid-template-rows: 40px auto 40px;
-  grid-template-areas:
-        "h h h h h h h h h h h h"
-        "m c c c c c c c c c c c"
-        "f f f f f f f f f f f f";
-}
-
-.header{
-  background-color:red;
-  grid-area: h;
-}
-
-.menu{
-  background-color:yellow;
-  grid-area: m;
 }
 
 .content{
-  grid-area: c;
-}
-
-.footer{
-  background-color:grey;
-  grid-area: f;
+  dislay: flex;
+  align-items: center;
+  grid-column: 2 / -2;
 }
 
 th, td {
